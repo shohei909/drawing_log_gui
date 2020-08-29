@@ -1,0 +1,6 @@
+{
+	"main": "main.js",
+	"devDependencies": {
+		"golden-layout": "^1.5.9"
+	}
+}

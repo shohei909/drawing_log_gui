@@ -1,0 +1,10 @@
+{
+  "name": "jQueryExtern",
+  "url": "http://github.com/andyli/jQueryExternForHaxe",
+  "license": "Public",
+  "tags": ["js","extern"],
+  "description": "Unleash the full power of jQuery in Haxe.",
+  "version": "3.2.1",
+  "releasenote": "Avoid Haxe 4 warning about Compiler.define().",
+  "contributors": ["andyli"]
+}

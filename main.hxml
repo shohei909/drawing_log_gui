@@ -1,0 +1,6 @@
+lib/hxnodejs-12,1,0/extraParams.hxml
+-js bin/main.js
+-cp src/main
+-main Main
+-cp lib/electron-10,0,0/src
+-cp lib/hxnodejs-12,1,0/src

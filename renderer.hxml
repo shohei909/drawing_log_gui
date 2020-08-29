@@ -1,0 +1,9 @@
+lib/hxnodejs-12,1,0/extraParams.hxml
+extern/jquery/extraParams.hxml
+-js bin/renderer.js
+-cp src/renderer
+-cp extern/goldenlayout/src
+-cp extern/jquery
+-main Main
+-cp lib/electron-10,0,0/src
+-cp lib/hxnodejs-12,1,0/src

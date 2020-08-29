@@ -1,0 +1,23 @@
+canvas 120 50 4.0
+fill_text H 10 10 100
+step
+fill_text He 10 10 100
+step
+line_text Hel 10 10 100
+step
+fill_text Hell 10 10 100
+step
+line_text Hello 10 10 100
+step
+fill_text "Hello " 10 10 100
+step
+line_text "Hello W" 10 10 100
+step
+fill_text "Hello Wo" 10 10 100
+step
+line_text "Hello Wor" 10 10 100
+step
+fill_text "Hello Worl" 10 10 100
+step
+line_text "Hello World" 10 10 100
+step
