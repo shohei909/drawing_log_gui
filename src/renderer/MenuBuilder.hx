@@ -20,6 +20,26 @@ class MenuBuilder
 				],
 			},
 			{
+				label: '&View',
+				submenu: [
+					{
+						label: '&Close Tab',
+						accelerator: 'CommandOrControl+W',
+						click: TabOperation.close,
+					},
+					{
+						label: 'Close &Other Tabs',
+						accelerator: 'CommandOrControl+Shift+W',
+						click: TabOperation.closeOthers,
+					},
+					{
+						label: 'Close &All Tabs',
+						accelerator: 'CommandOrControl+Alt+W',
+						click: TabOperation.closeAll,
+					},
+				],
+			},
+			{
 				label: '&Help',
 				submenu: [
 					{

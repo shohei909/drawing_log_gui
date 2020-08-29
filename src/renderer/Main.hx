@@ -1,12 +1,14 @@
 package ;
 import electron.renderer.IpcRenderer;
 import electron.renderer.Remote;
+import golden_layout.Config;
 import golden_layout.Config.ItemConfig;
 import golden_layout.Container;
 import golden_layout.GoldenLayout;
 import js.Browser;
 import js.Node;
 import js.Syntax;
+import js.html.Event;
 import js.node.Path;
 
 class Main 
@@ -24,7 +26,11 @@ class Main
 		untyped Browser.window.$ = Browser.window.jQuery = Node.require("jquery");
 		Syntax.code('var GoldenLayout = require("golden-layout")');
 		var contents = [for (fileName in fileNames) createFileContent(fileName)];
-		var config = {
+		var config:Config = {
+			settings: {
+				showPopoutIcon: false,
+				showMaximiseIcon: false,
+			},
 			content:[{
 				type: "stack",
 				content: contents
@@ -38,6 +44,9 @@ class Main
 	private static function openFile(container:Container, componentState :Dynamic):Void
 	{
 		var element = container.getElement().get(0);
+		element.tabIndex = 0;
+		container.on(ContainerEvent.Show, FocusManager.focus.bind(container));
+		element.addEventListener("focus", FocusManager.focus.bind(container));
 	}
 	
 	private static function createFileContent(path:String):ItemConfig
@@ -46,6 +55,7 @@ class Main
 			type: 'component',
 			componentName: 'file',
 			componentState: { path: path },
+			id : "file_" + Std.random(0x7FFFFFF),
 			title: Path.basename(path)
 		};
 	}

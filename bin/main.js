@@ -29,7 +29,6 @@ Main.onReady = function() {
 Main.onLoad = function($window) {
 	var args = electron_main_App.isPackaged ? 1 : 2;
 	var args1 = process.argv.slice(args);
-	console.log("src/main/Main.hx:44:",args1);
 	$window.webContents.send("init",args1);
 };
 Math.__name__ = true;
