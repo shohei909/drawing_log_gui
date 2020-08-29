@@ -4,6 +4,7 @@ import electron.renderer.Remote;
 import golden_layout.Config;
 import golden_layout.Config.ItemConfig;
 import golden_layout.Container;
+import golden_layout.ContentItem;
 import golden_layout.GoldenLayout;
 import js.Browser;
 import js.Node;
@@ -49,12 +50,12 @@ class Main
 		element.addEventListener("focus", FocusManager.focus.bind(container));
 	}
 	
-	private static function createFileContent(path:String):ItemConfig
+	public static function createFileContent(path:String):ItemConfig
 	{
 		return {
 			type: 'component',
 			componentName: 'file',
-			componentState: { path: path },
+			componentState: { path: Path.resolve(path) },
 			id : "file_" + Std.random(0x7FFFFFF),
 			title: Path.basename(path)
 		};

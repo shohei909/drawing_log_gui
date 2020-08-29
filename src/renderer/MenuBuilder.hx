@@ -5,17 +5,19 @@ class MenuBuilder
 {
 	public static function build():Menu
 	{
-		var template:Array<haxe.extern.EitherType<Dynamic, Dynamic>> = [
+		var template:Array<Dynamic> = [
 			{
 				label: '&File',
 				submenu: [
 					{
 						label: '&Open',
 						accelerator: 'CommandOrControl+O',
+						click: FileOperation.open,
 					},
 					{
 						label: '&Export',
 						accelerator: 'CommandOrControl+E',
+						click: FileOperation.export,
 					},
 				],
 			},
