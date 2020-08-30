@@ -6,6 +6,8 @@ import electron.main.Menu;
 import electron.main.MenuItem;
 import electron.renderer.Remote;
 import js.node.Path;
+import operation.FileOperation;
+import operation.TabOperation;
 
 class MenuBuilder 
 {
@@ -28,7 +30,6 @@ class MenuBuilder
 					{
 						id: "recent",
 						label: '&Recent Files',
-						accelerator: 'CommandOrControl+E',
 						submenu: [],
 					},
 					{

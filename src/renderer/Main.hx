@@ -13,6 +13,8 @@ import js.html.Event;
 import js.lib.BufferSource;
 import js.node.Path;
 import Vilog;
+import operation.FileOperation;
+import storage.LayoutStorage;
 import vilog.enums.VilogKeyboardMode;
 import vilog.enums.VilogLogLevel;
 
@@ -24,9 +26,11 @@ class Main
 		var currentWindow = Remote.getCurrentWindow();
 		currentWindow.setMenu(MenuBuilder.build());
 		IpcRenderer.on("init", init);
+		
+		
 	}
 
-	private static function init(event:Dynamic, fileNames:Array<Dynamic>):Void
+	private static function init(event:Dynamic, fileNames:Array<String>):Void
 	{
 		var vilog = Node.require("./vilog.min.js");
 		untyped window.Vilog = vilog.Vilog;
@@ -35,17 +39,14 @@ class Main
 		Vilog.changeKeyboardMode(VilogKeyboardMode.FocusedOrBody);
 		
 		untyped Browser.window.$ = Browser.window.jQuery = Node.require("jquery");
-		Syntax.code('var GoldenLayout = require("golden-layout")');
-		var contents = [for (fileName in fileNames) createFileContent(fileName)];
+		untyped window.GoldenLayout = require("golden-layout");
+		var contents = LayoutStorage.load(Remote.getCurrentWindow(), fileNames, "main");
 		var config:Config = {
 			settings: {
 				showPopoutIcon: false,
 				showMaximiseIcon: false,
 			},
-			content:[{
-				type: "stack",
-				content: contents
-			}]
+			content:[contents]
 		};
 		goldenLayout = new GoldenLayout(config);
 		goldenLayout.registerComponent("file", openFile);
@@ -86,37 +87,42 @@ class Main
 	{
 		container.off(ContainerEvent.Show);
 		var id = "player_" + container.parent.config.id;
-		var element = Browser.document.getElementById(id);
-		var player = Vilog.getPlayer(element);
-		var image:VilogImage = Vilog.getImage(element.getElementsByClassName("vilog").item(0));
+		var playerElement = Browser.document.getElementById(id);
+		var player = Vilog.getPlayer(playerElement);
+		var image:VilogImage = Vilog.getImage(playerElement.getElementsByClassName("vilog").item(0));
 		var path = untyped container.parent.config.componentState.path;
 		image.loadFile(path);
 		
-		image.addLogger(new VilogElementLogger(path, VilogLogLevel.All, container.getElement().get(0).getElementsByClassName("vilog-log").item(0)));
+		var logElement = container.getElement().get(0).getElementsByClassName("vilog-log").item(0);
+		image.addLogger(new VilogElementLogger(path, VilogLogLevel.All, logElement));
 		
 		container.on(ContainerEvent.Show, FocusManager.focus.bind(container));
-		element.addEventListener("focus", FocusManager.focus.bind(container));
+		playerElement.addEventListener("focus", FocusManager.focus.bind(container));
 		container.on(ContainerEvent.Show, onFocus.bind(container));
-		element.addEventListener("focus", onFocus.bind(container));
+		playerElement.addEventListener("focus", onFocus.bind(container));
+		var split:Dynamic = Node.require("./splitjs/split.min.js");
+		
+		split(
+			[playerElement, logElement], 
+			{
+				direction: 'vertical',
+				sizes: untyped container.parent.config.componentState.sizes,
+				gutterSize: 7,
+			}
+		);
 		
 		FocusManager.focus(container);
 		onFocus(container);
 	}
+	
 	private static function onFocus(container:Container):Void 
-	{
+	{	
 		var id = "player_" + container.parent.config.id;
 		var element = Browser.document.getElementById(id);
 		if (element != null && element != Browser.document.activeElement) { element.focus(); }
-	}
-	
-	public static function createFileContent(path:String):ItemConfig
-	{
-		return {
-			type: 'component',
-			componentName: 'file',
-			componentState: { path: Path.resolve(path) },
-			id : "f" + Std.random(0x7FFFFFF),
-			title: Path.basename(path)
-		};
+		if (Main.goldenLayout.isInitialised)
+		{
+			trace(Main.goldenLayout.toConfig().content);
+		}
 	}
 }

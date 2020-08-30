@@ -5,7 +5,7 @@
 .vilog-log {
 	width:100%;
 	flex: 0.1 0 auto;
-	min-height: 50px;
+	min-height: 20px;
 	margin: 0;
 	padding: 0;
 }
@@ -29,4 +29,18 @@
 }
 .lm_content:focus {
 	outline:0
+}
+.gutter-vertical {
+	border-top: solid 1px #F1F1F1;
+	border-bottom: solid 1px #F1F1F1;
+	background-color: #FAFAFA;
+	z-index:1;
+	cursor:ns-resize;
+}
+.gutter-horizontal {
+	border-right: solid 1px #F1F1F1;
+	border-left: solid 1px #F1F1F1;
+	background-color: #FAFAFA;
+	z-index:1;
+	cursor:es-resize;
 }

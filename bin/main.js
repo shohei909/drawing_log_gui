@@ -415,7 +415,6 @@ window_WindowStorage.load = function(browserWindow,key) {
 		window_WindowStorage.save(browserWindow,key);
 	});
 	var path = window_WindowStorage.DIR + "/" + key + ".json";
-	console.log("src/main/window/WindowStorage.hx:46:",path);
 	if(sys_FileSystem.exists(path)) {
 		var data = JSON.parse(js_node_Fs.readFileSync(path,{ encoding : "utf8"}));
 		browserWindow.setBounds({ x : data.x, y : data.y, width : data.width, height : data.height});

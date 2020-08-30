@@ -1,10 +1,11 @@
-package ;
+package operation;
 import electron.main.Dialog;
 import electron.renderer.Remote;
 import golden_layout.ContentItem;
 import js.Browser;
 import js.Node;
 import js.node.Path;
+import storage.LayoutStorage;
 
 class FileOperation 
 {
@@ -50,7 +51,7 @@ class FileOperation
 			{
 				stack = findStackFromTop(Main.goldenLayout.root);
 			}
-			stack.addChild(Main.createFileContent(path));
+			stack.addChild(LayoutStorage.createFileContent(path));
 		}
 	}
 	public static function reload(contentItem:ContentItem):Void
