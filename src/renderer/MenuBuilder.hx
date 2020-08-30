@@ -97,6 +97,22 @@ class MenuBuilder
 							}
 						}
 					},
+					{ type: 'separator' },
+					{
+						label: 'Zoom &In',
+						accelerator: 'CommandOrControl+Plus',
+						click: TabOperation.zoomIn,
+					},
+					{
+						label: '&Zoom Out',
+						accelerator: 'CommandOrControl+-',
+						click: TabOperation.zoomOut,
+					},
+					{
+						label: 'Zoom R&eset',
+						accelerator: 'CommandOrControl+0',
+						click: TabOperation.zoomReset,
+					},
 				]:Array<Dynamic>),
 			},
 			{

@@ -10,10 +10,12 @@ import js.Node;
 import js.Syntax;
 import js.html.DragEvent;
 import js.html.Event;
+import js.html.WheelEvent;
 import js.lib.BufferSource;
 import js.node.Path;
 import Vilog;
 import operation.FileOperation;
+import operation.TabOperation;
 import storage.LayoutStorage;
 import vilog.enums.VilogKeyboardMode;
 import vilog.enums.VilogLogLevel;
@@ -57,8 +59,18 @@ class Main
 			return false;
 		};
 		Browser.document.body.addEventListener("drop", onDrop);
+		Browser.window.addEventListener("wheel", onWheel);
 	}
-	
+	private static function onWheel(e:WheelEvent):Void
+	{
+		if (e.ctrlKey)
+		{
+			if (e.deltaY != 0)
+			{
+				TabOperation.zoom(Math.pow(1.125, -e.deltaY / 100));
+			}
+		}
+	}
 	private static function onDrop(e:DragEvent):Void
 	{
 		if (0 < e.dataTransfer.files.length)
@@ -86,11 +98,17 @@ class Main
 	private static function onOpen(container:Container):Void
 	{
 		container.off(ContainerEvent.Show);
-		var id = "player_" + container.parent.config.id;
+		var config = container.parent.config;
+		var id = "player_" + config.id;
 		var playerElement = Browser.document.getElementById(id);
 		var player = Vilog.getPlayer(playerElement);
-		var image:VilogImage = Vilog.getImage(playerElement.getElementsByClassName("vilog").item(0));
-		var path = untyped container.parent.config.componentState.path;
+		var imageElement = playerElement.getElementsByClassName("vilog").item(0);
+		var image:VilogImage = Vilog.getImage(imageElement);
+		var path = untyped config.componentState.path;
+		image.stream.addChangeHandler(() -> {
+			var scale:Float = untyped if (config.scale == null || config.scale == 0) 1.0 else config.scale;
+			TabOperation.applyZoom(container.getElement().get(0).getElementsByClassName("vi-image").item(0), scale);	
+		});
 		image.loadFile(path);
 		
 		var logElement = container.getElement().get(0).getElementsByClassName("vilog-log").item(0);
@@ -106,7 +124,7 @@ class Main
 			[playerElement, logElement], 
 			{
 				direction: 'vertical',
-				sizes: untyped container.parent.config.componentState.sizes,
+				sizes: untyped config.componentState.sizes,
 				gutterSize: 7,
 			}
 		);
@@ -120,9 +138,5 @@ class Main
 		var id = "player_" + container.parent.config.id;
 		var element = Browser.document.getElementById(id);
 		if (element != null && element != Browser.document.activeElement) { element.focus(); }
-		if (Main.goldenLayout.isInitialised)
-		{
-			trace(Main.goldenLayout.toConfig().content);
-		}
 	}
 }

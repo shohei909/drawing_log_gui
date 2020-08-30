@@ -1,6 +1,5 @@
 package;
 
-
 @:expose("Vilog") extern class Vilog {
 	static var focusedPlayer(default,null) : VilogPlayer;
 	private static var frame : Int;

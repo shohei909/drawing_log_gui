@@ -1,7 +1,71 @@
 package operation;
+import js.html.CanvasElement;
+import js.html.Element;
 
 class TabOperation 
 {
+	
+	public static function zoomIn():Void
+	{
+		var item = FocusManager.focusedItem;
+		if (item == null) return;
+		if (item.isComponent)
+		{
+			zoom(1.5);
+		}
+	}
+	public static function zoomOut():Void
+	{
+		var item = FocusManager.focusedItem;
+		if (item == null) return;
+		if (item.isComponent)
+		{
+			zoom(1 / 1.5);
+		}
+	}
+	public static function zoom(value:Float):Void
+	{
+		var item = FocusManager.focusedItem;
+		var element = item.element.get(0).getElementsByClassName("vi-image").item(0);
+		var scale:Float = untyped if (item.config.scale == null || item.config.scale == 0) 1.0 else item.config.scale;
+		if (1 <= value || 0.25 <= scale)
+		{
+			scale *= value;
+			untyped item.config.scale = scale;
+			applyZoom(element, scale);
+		}
+	}
+	public static function applyZoom(element:Element, scale:Float):Void
+	{
+		var width = 0;
+		var height = 0;
+		for (canvas in element.getElementsByTagName("canvas"))
+		{
+			var canvas:CanvasElement = cast canvas;
+			width = canvas.width;
+			height = canvas.height;
+			canvas.style.width = width * scale + "px";
+			canvas.style.height = height * scale + "px";
+		}
+		if (width != 0)
+		{
+			element.style.width = width * scale + "px";
+			element.style.height = height * scale + "px";
+		}
+	}
+	public static function zoomReset():Void
+	{
+		var item = FocusManager.focusedItem;
+		if (item == null) return;
+		if (item.isComponent)
+		{
+			var element = item.element.get(0).getElementsByClassName("vi-image").item(0);
+			var scale = 1;
+			untyped item.config.scale = scale;
+			applyZoom(element, scale);
+		}
+	}
+	
 	public static function close():Void
 	{
 		var item = FocusManager.focusedItem;

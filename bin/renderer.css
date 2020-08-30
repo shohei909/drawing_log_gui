@@ -19,9 +19,13 @@
 .vilog-player .vi-content {
 	flex: 1 1 0;
 	overflow: auto;
-	display: flex;
-    justify-content: center;
-    align-items: center;
+	flex-direction: column;
+	align-items: start;
+	justify-content: start;
+}
+.vilog-player .vi-content>div {
+	min-height: min-content;
+	margin: auto;
 }
 .vilog-player .vi-foot {
 	flex: none;

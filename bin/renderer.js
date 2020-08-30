@@ -57,6 +57,14 @@ Main.init = function(event,fileNames) {
 		return false;
 	};
 	window.document.body.addEventListener("drop",Main.onDrop);
+	window.addEventListener("wheel",Main.onWheel);
+};
+Main.onWheel = function(e) {
+	if(e.ctrlKey) {
+		if(e.deltaY != 0) {
+			operation_TabOperation.zoom(Math.pow(1.125,-e.deltaY / 100));
+		}
+	}
 };
 Main.onDrop = function(e) {
 	if(0 < e.dataTransfer.files.length) {
@@ -76,32 +84,40 @@ Main.openFile = function(container,componentState) {
 };
 Main.onOpen = function(container) {
 	container.off("show");
-	var id = "player_" + container.parent.config.id;
+	var config = container.parent.config;
+	var id = "player_" + config.id;
 	var playerElement = window.document.getElementById(id);
 	var player = Vilog.getPlayer(playerElement);
-	var image = Vilog.getImage(playerElement.getElementsByClassName("vilog").item(0));
-	var path = container.parent.config.componentState.path;
+	var imageElement = playerElement.getElementsByClassName("vilog").item(0);
+	var image = Vilog.getImage(imageElement);
+	var path = config.componentState.path;
+	image.stream.addChangeHandler(function() {
+		var scale = config.scale == null || config.scale == 0 ? 1.0 : config.scale;
+		operation_TabOperation.applyZoom(container.getElement().get(0).getElementsByClassName("vi-image").item(0),scale);
+	});
 	image.loadFile(path);
 	var logElement = container.getElement().get(0).getElementsByClassName("vilog-log").item(0);
 	image.addLogger(new VilogElementLogger(path,vilog_enums_VilogLogLevel.All,logElement));
 	var container1 = container;
-	container.on("show",function() {
+	var tmp = function() {
 		FocusManager.focus(container1);
-	});
+	};
+	container.on("show",tmp);
 	var container2 = container;
 	playerElement.addEventListener("focus",function() {
 		FocusManager.focus(container2);
 	});
 	var container3 = container;
-	container.on("show",function() {
+	var tmp = function() {
 		Main.onFocus(container3);
-	});
+	};
+	container.on("show",tmp);
 	var container4 = container;
 	playerElement.addEventListener("focus",function() {
 		Main.onFocus(container4);
 	});
 	var split = require("./splitjs/split.min.js");
-	split([playerElement,logElement],{ direction : "vertical", sizes : container.parent.config.componentState.sizes, gutterSize : 7});
+	split([playerElement,logElement],{ direction : "vertical", sizes : config.componentState.sizes, gutterSize : 7});
 	FocusManager.focus(container);
 	Main.onFocus(container);
 };
@@ -110,9 +126,6 @@ Main.onFocus = function(container) {
 	var element = window.document.getElementById(id);
 	if(element != null && element != window.document.activeElement) {
 		element.focus();
-	}
-	if(Main.goldenLayout.isInitialised) {
-		console.log("src/renderer/Main.hx:125:",Main.goldenLayout.toConfig().content);
 	}
 };
 Math.__name__ = true;
@@ -129,7 +142,7 @@ MenuBuilder.build = function() {
 			var template1 = js_node_Path.dirname(item.config.componentState.path);
 			template.openPath(template1);
 		}
-	}}]},{ label : "&Help", submenu : [{ label : "&Github Repogitory", click : function(item,focusedWindow) {
+	}},{ type : "separator"},{ label : "Zoom &In", accelerator : "CommandOrControl+Plus", click : operation_TabOperation.zoomIn},{ label : "&Zoom Out", accelerator : "CommandOrControl+-", click : operation_TabOperation.zoomOut},{ label : "Zoom R&eset", accelerator : "CommandOrControl+0", click : operation_TabOperation.zoomReset}]},{ label : "&Help", submenu : [{ label : "&Github Repogitory", click : function(item,focusedWindow) {
 		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/visual_log_viewer");
 	}},{ label : "&Online Documentation", click : function(item,focusedWindow) {
 		electron_renderer_Remote.shell.openExternal("http://vilog.corge.net/");
@@ -473,6 +486,65 @@ operation_FileOperation.export = function() {
 };
 var operation_TabOperation = function() { };
 operation_TabOperation.__name__ = true;
+operation_TabOperation.zoomIn = function() {
+	var item = FocusManager.get_focusedItem();
+	if(item == null) {
+		return;
+	}
+	if(item.isComponent) {
+		operation_TabOperation.zoom(1.5);
+	}
+};
+operation_TabOperation.zoomOut = function() {
+	var item = FocusManager.get_focusedItem();
+	if(item == null) {
+		return;
+	}
+	if(item.isComponent) {
+		operation_TabOperation.zoom(0.66666666666666663);
+	}
+};
+operation_TabOperation.zoom = function(value) {
+	var item = FocusManager.get_focusedItem();
+	var element = item.element.get(0).getElementsByClassName("vi-image").item(0);
+	var scale = item.config.scale == null || item.config.scale == 0 ? 1.0 : item.config.scale;
+	if(1 <= value || 0.25 <= scale) {
+		scale *= value;
+		item.config.scale = scale;
+		operation_TabOperation.applyZoom(element,scale);
+	}
+};
+operation_TabOperation.applyZoom = function(element,scale) {
+	var width = 0;
+	var height = 0;
+	var _g = 0;
+	var _g1 = element.getElementsByTagName("canvas");
+	while(_g < _g1.length) {
+		var canvas = _g1[_g];
+		++_g;
+		var canvas1 = canvas;
+		width = canvas1.width;
+		height = canvas1.height;
+		canvas1.style.width = width * scale + "px";
+		canvas1.style.height = height * scale + "px";
+	}
+	if(width != 0) {
+		element.style.width = width * scale + "px";
+		element.style.height = height * scale + "px";
+	}
+};
+operation_TabOperation.zoomReset = function() {
+	var item = FocusManager.get_focusedItem();
+	if(item == null) {
+		return;
+	}
+	if(item.isComponent) {
+		var element = item.element.get(0).getElementsByClassName("vi-image").item(0);
+		var scale = 1;
+		item.config.scale = scale;
+		operation_TabOperation.applyZoom(element,scale);
+	}
+};
 operation_TabOperation.close = function() {
 	var item = FocusManager.get_focusedItem();
 	if(item == null) {
