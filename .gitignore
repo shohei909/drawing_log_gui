@@ -36,5 +36,8 @@ typings/
 # npm
 node_modules
 
+#electron
+bin/dist
+
 # Haxe
 hxclasses

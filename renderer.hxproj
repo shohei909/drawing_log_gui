@@ -18,6 +18,7 @@
     <class path="src\renderer" />
     <class path="extern\goldenlayout\src" />
     <class path="extern\jquery" />
+    <class path="extern\vilog" />
     <class path="lib\electron-10,0,0\src" />
     <class path="lib\hxnodejs-12,1,0\src" />
   </classpaths>

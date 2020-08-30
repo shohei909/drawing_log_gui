@@ -1,4 +1,5 @@
 package ;
+import electron.main.Dialog;
 import electron.renderer.Remote;
 import golden_layout.ContentItem;
 import js.Node;
@@ -8,8 +9,8 @@ class FileOperation
 {
 	public static function open():Void
 	{
-		var dialog:Dynamic = untyped Remote.dialog;
-		dialog.showOpenDialog(
+		var dialog = untyped Remote.dialog;
+		var openDialog = dialog.showOpenDialog(
 			Remote.getCurrentWindow(),
 			{
 				properties: ['openFile', 'multiSelections'],
@@ -19,42 +20,44 @@ class FileOperation
 						extensions: ['vilog']
 					}
 				]
-			},
-			openFiles
+			}
+		).then(openFiles);
+	}
+	public static function openFile(path:String):Void
+	{
+		var path = Path.resolve(path);
+		var existing = Main.goldenLayout.root.getItemsByFilter(
+			(item:ContentItem) -> {
+				var state = item.config.componentState;
+				if (state == null) return false;
+				untyped state.path == path;
+			}
 		);
+		if (0 < existing.length)
+		{
+			var target = existing[0];
+			if (target.parent != null && target.parent.isStack)
+			{
+				target.parent.setActiveContentItem(target);
+			}
+		}
+		else
+		{
+			var stack = findStackFromBottom(FocusManager.focusedItem);
+			if (stack == null)
+			{
+				stack = findStackFromTop(Main.goldenLayout.root);
+			}
+			stack.addChild(Main.createFileContent(path));
+		}
 	}
 	
-	private static function openFiles(filePaths:Array<String>):Void 
+	private static function openFiles(event:Dynamic):Void 
 	{
+		var filePaths:Array<String> = event.filePaths;
 		for (path in filePaths)
 		{
-			var path = Path.resolve(path);
-			var existing = Main.goldenLayout.root.getItemsByFilter(
-				(item:ContentItem) -> {
-					var state = item.config.componentState;
-					if (state == null) return false;
-					untyped state.path == path;
-				}
-			);
-			if (0 < existing.length)
-			{
-				var target = existing[0];
-				trace(target);
-				if (target.parent != null && target.parent.isStack)
-				{
-					target.parent.setActiveContentItem(target);
-				}
-			}
-			else
-			{
-				trace(path);
-				var stack = findStackFromBottom(FocusManager.focusedItem);
-				if (stack == null)
-				{
-					stack = findStackFromTop(Main.goldenLayout.root);
-				}
-				stack.addChild(Main.createFileContent(path));
-			}
+			openFile(path);
 		}
 	}
 	
@@ -70,7 +73,6 @@ class FileOperation
 		{
 			return item;
 		}
-		trace(item.isComponent);
 		if (item.isComponent)
 		{
 			item.parent.addChild({ type: "stack", content:[] });

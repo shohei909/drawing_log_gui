@@ -23,8 +23,9 @@ class Main
 			width     : 1000,
 			height    : 750,
 			webPreferences: {
-				nodeIntegration : false,
+				nodeIntegration : true,
 				contextIsolation: false,
+				enableRemoteModule: true,
 				preload: Node.__dirname + '/renderer.js',
 			},
 			title: "Visual Log Viewer",

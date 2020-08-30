@@ -1,0 +1,23 @@
+.lm_content {
+	display: flex;
+}
+.vilog-player {
+	height:100%;
+	width:100%;
+	border: none;
+	display: flex;
+    flex-direction: column;
+}
+.vilog-player .vi-row {
+	flex: 1 1 0;
+	overflow: auto;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.vilog-player .vi-foot {
+	flex: none;
+}
+.lm_content:focus {
+	outline:0
+}
