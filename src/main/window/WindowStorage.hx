@@ -1,15 +1,13 @@
 package window;
-import electron.Rectangle;
 import electron.main.App;
 import electron.main.BrowserWindow;
 import haxe.Json;
-import js.html.Event;
 import sys.FileSystem;
 import sys.io.File;
 
 class WindowStorage 
 {
-	private static var DIR:String = App.getPath("userData") + "window";
+	private static var DIR:String = App.getPath("userData") + "/state/window";
 	
 	private static function save(browserWindow:BrowserWindow, key:String):Void
 	{

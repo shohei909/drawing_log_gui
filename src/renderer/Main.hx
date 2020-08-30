@@ -14,11 +14,11 @@ import js.lib.BufferSource;
 import js.node.Path;
 import Vilog;
 import vilog.enums.VilogKeyboardMode;
+import vilog.enums.VilogLogLevel;
 
 class Main 
 {
 	public static var goldenLayout:GoldenLayout;
-	private static var vilog:Dynamic;
 	public static function main():Void
 	{
 		var currentWindow = Remote.getCurrentWindow();
@@ -28,8 +28,11 @@ class Main
 
 	private static function init(event:Dynamic, fileNames:Array<Dynamic>):Void
 	{
-		vilog = Node.require("./vilog.min.js");
-		vilog.Vilog.changeKeyboardMode(VilogKeyboardMode.FocusedOrBody);
+		var vilog = Node.require("./vilog.min.js");
+		untyped window.Vilog = vilog.Vilog;
+		untyped window.VilogElementLogger = vilog.VilogElementLogger;
+		
+		Vilog.changeKeyboardMode(VilogKeyboardMode.FocusedOrBody);
 		
 		untyped Browser.window.$ = Browser.window.jQuery = Node.require("jquery");
 		Syntax.code('var GoldenLayout = require("golden-layout")');
@@ -70,7 +73,12 @@ class Main
 		element.tabIndex = 0;
 		
 		var id = "player_" + container.parent.config.id;
-		container.getElement().get(0).innerHTML = '<div id="$id" class="vilog-player"><div class="vilog"></div></div>';
+		container.getElement().get(0).innerHTML = '
+<div id="$id" class="vilog-player">
+<div class="vi-row vi-content"><div class="vilog"></div></div>
+</div>
+<code class="vilog-log"></code>
+';
 		container.on(ContainerEvent.Show, onOpen.bind(container));
 	}
 	
@@ -79,9 +87,12 @@ class Main
 		container.off(ContainerEvent.Show);
 		var id = "player_" + container.parent.config.id;
 		var element = Browser.document.getElementById(id);
-		var player = vilog.Vilog.getPlayer(element);
-		var image:VilogImage = vilog.Vilog.getImage(element.getElementsByClassName("vilog").item(0));
-		image.loadFile(untyped container.parent.config.componentState.path);
+		var player = Vilog.getPlayer(element);
+		var image:VilogImage = Vilog.getImage(element.getElementsByClassName("vilog").item(0));
+		var path = untyped container.parent.config.componentState.path;
+		image.loadFile(path);
+		
+		image.addLogger(new VilogElementLogger(path, VilogLogLevel.All, container.getElement().get(0).getElementsByClassName("vilog-log").item(0)));
 		
 		container.on(ContainerEvent.Show, FocusManager.focus.bind(container));
 		element.addEventListener("focus", FocusManager.focus.bind(container));

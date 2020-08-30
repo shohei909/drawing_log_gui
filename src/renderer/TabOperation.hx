@@ -27,9 +27,47 @@ class TabOperation
 		}
 	}
 	
+	public static function reload():Void
+	{
+		var item = FocusManager.focusedItem;
+		if (item == null) return;
+		if (item.isComponent)
+		{
+			FileOperation.reload(item);
+		}
+	}
+	
 	public static function closeAll():Void
 	{
 		closeOthers();
 		close();
+	}
+	
+	
+	public static function next():Void
+	{
+		var item = FocusManager.focusedItem;
+		if (item == null) return;
+		if (item.parent == null || !item.parent.isStack) return;
+		
+		var index = item.parent.contentItems.indexOf(item);
+		var length = item.parent.contentItems.length;
+		var targetItem = item.parent.contentItems[(index + 1) % length];
+		
+		item.parent.setActiveContentItem(targetItem);
+		targetItem.element.focus();
+	}
+	public static function prev():Void
+	{
+		var item = FocusManager.focusedItem;
+		if (item == null) return;
+		if (item.parent == null || !item.parent.isStack) return;
+		
+		var index = item.parent.contentItems.indexOf(item);
+		var length = item.parent.contentItems.length;
+		var targetItem = item.parent.contentItems[(index + length - 1) % length];
+		
+		item.parent.setActiveContentItem(targetItem);
+		targetItem.element.focus();
 	}
 }

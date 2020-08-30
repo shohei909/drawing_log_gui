@@ -6,7 +6,7 @@ import js.html.Node;
 
 class FocusManager 
 {
-	public static var focusedItem(get, null):ContentItem;
+	public static var focusedItem(get, default):ContentItem;
 	private static function get_focusedItem():ContentItem 
 	{
 		if (focusedItem != null && !isAlive(focusedItem.element.get(0)))
@@ -30,5 +30,5 @@ class FocusManager
 	public static function focus(container:Container):Void
 	{
 		focusedItem = container.parent;
-	}	
+	}
 }

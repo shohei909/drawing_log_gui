@@ -18,6 +18,7 @@ FileOperation.openFile = function(path) {
 	if(0 < existing.length) {
 		var target = existing[0];
 		if(target.parent != null && target.parent.isStack) {
+			FileOperation.reload(target);
 			target.parent.setActiveContentItem(target);
 		}
 	} else {
@@ -27,6 +28,13 @@ FileOperation.openFile = function(path) {
 		}
 		stack.addChild(Main.createFileContent(path1));
 	}
+};
+FileOperation.reload = function(contentItem) {
+	var id = "player_" + contentItem.config.id;
+	var element = window.document.getElementById(id);
+	var player = Vilog.getPlayer(element);
+	var image = Vilog.getImage(element.getElementsByClassName("vilog").item(0));
+	image.loadFile(contentItem.config.componentState.path);
 };
 FileOperation.openFiles = function(event) {
 	var filePaths = event.filePaths;
@@ -97,8 +105,10 @@ Main.main = function() {
 	electron_renderer_IpcRenderer.on("init",Main.init);
 };
 Main.init = function(event,fileNames) {
-	Main.vilog = require("./vilog.min.js");
-	Main.vilog.Vilog.changeKeyboardMode(1);
+	var vilog = require("./vilog.min.js");
+	window.Vilog = vilog.Vilog;
+	window.VilogElementLogger = vilog.VilogElementLogger;
+	Vilog.changeKeyboardMode(1);
 	window.$ = window.jQuery = require("jquery");
 	var GoldenLayout = require("golden-layout");
 	var _g = [];
@@ -129,7 +139,7 @@ Main.openFile = function(container,componentState) {
 	var element = container.getElement().get(0);
 	element.tabIndex = 0;
 	var id = "player_" + container.parent.config.id;
-	container.getElement().get(0).innerHTML = "<div id=\"" + id + "\" class=\"vilog-player\"><div class=\"vilog\"></div></div>";
+	container.getElement().get(0).innerHTML = "\r\n<div id=\"" + id + "\" class=\"vilog-player\">\r\n<div class=\"vi-row vi-content\"><div class=\"vilog\"></div></div>\r\n</div>\r\n<code class=\"vilog-log\"></code>\r\n";
 	var container1 = container;
 	container.on("show",function() {
 		Main.onOpen(container1);
@@ -139,9 +149,11 @@ Main.onOpen = function(container) {
 	container.off("show");
 	var id = "player_" + container.parent.config.id;
 	var element = window.document.getElementById(id);
-	var player = Main.vilog.Vilog.getPlayer(element);
-	var image = Main.vilog.Vilog.getImage(element.getElementsByClassName("vilog").item(0));
-	image.loadFile(container.parent.config.componentState.path);
+	var player = Vilog.getPlayer(element);
+	var image = Vilog.getImage(element.getElementsByClassName("vilog").item(0));
+	var path = container.parent.config.componentState.path;
+	image.loadFile(path);
+	image.addLogger(new VilogElementLogger(path,vilog_enums_VilogLogLevel.All,container.getElement().get(0).getElementsByClassName("vilog-log").item(0)));
 	var container1 = container;
 	container.on("show",function() {
 		FocusManager.focus(container1);
@@ -173,12 +185,36 @@ Main.createFileContent = function(path) {
 };
 var MenuBuilder = function() { };
 MenuBuilder.build = function() {
-	var template = [{ label : "&File", submenu : [{ label : "&Open", accelerator : "CommandOrControl+O", click : FileOperation.open},{ label : "&Export", accelerator : "CommandOrControl+E", click : FileOperation.export}]},{ label : "&View", submenu : [{ label : "&Close Tab", accelerator : "CommandOrControl+W", click : TabOperation.close},{ label : "Close &Other Tabs", accelerator : "CommandOrControl+Shift+W", click : TabOperation.closeOthers},{ label : "Close &All Tabs", accelerator : "CommandOrControl+Alt+W", click : TabOperation.closeAll}]},{ label : "&Help", submenu : [{ label : "&Toggle Developer Tools", accelerator : "F12", click : function(item,focusedWindow) {
-		if(focusedWindow != null) {
-			focusedWindow.webContents.toggleDevTools();
+	var template = [{ label : "&File", id : "file", role : "fileMenu", submenu : [{ label : "&Open", accelerator : "CommandOrControl+O", click : FileOperation.open},{ id : "recent", label : "&Recent Files", accelerator : "CommandOrControl+E", submenu : []},{ id : "export", label : "&Export", accelerator : "CommandOrControl+E", click : FileOperation.export},{ type : "separator"},{ label : "&Restart", click : function(item,focusedWindow) {
+		electron_renderer_Remote.app.relaunch({ });
+		electron_renderer_Remote.app.exit();
+	}}]},{ label : "&View", id : "file", role : "viewMenu", submenu : [{ label : "&Close Tab", accelerator : "CommandOrControl+W", click : TabOperation.close},{ label : "Close &Other Tabs", accelerator : "CommandOrControl+Shift+W", click : TabOperation.closeOthers},{ label : "Close &All Tabs", accelerator : "CommandOrControl+Alt+W", click : TabOperation.closeAll},{ type : "separator"},{ label : "&Next Tab", accelerator : "CommandOrControl+Tab", click : TabOperation.next},{ label : "&Previous Tab", accelerator : "CommandOrControl+Shift+Tab", click : TabOperation.prev},{ type : "separator"},{ label : "&Reload Tab", accelerator : "F5", click : TabOperation.reload},{ type : "separator"},{ label : "Open &Directory", accelerator : "Alt+Shift+R", click : function(item,focusedWindow) {
+		var item = FocusManager.get_focusedItem();
+		if(item != null && item.isComponent && item.config.componentState.path != null) {
+			var template = electron_renderer_Remote.shell;
+			var template1 = js_node_Path.dirname(item.config.componentState.path);
+			template.openPath(template1);
 		}
-	}}]}];
+	}}]},{ label : "&Help", submenu : [{ label : "&Github Repogitory", click : function(item,focusedWindow) {
+		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/visual_log_viewer");
+	}},{ label : "&Online Documentation", click : function(item,focusedWindow) {
+		electron_renderer_Remote.shell.openExternal("http://vilog.corge.net/");
+	}},{ label : "&Version", click : function(item,focusedWindow) {
+		var dialog = electron_renderer_Remote.dialog;
+		var template = "Visual Log Viewer: " + electron_renderer_Remote.app.getVersion();
+		dialog.showMessageBox({ title : "About Visual Log Viewer", message : template});
+	}},{ type : "separator"},{ label : "&Open Storage Directory", click : function(item,focusedWindow) {
+		var template = electron_renderer_Remote.shell;
+		var template1 = electron_renderer_Remote.app.getPath("userData");
+		template.openPath(template1);
+	}},{ label : "Open &Installation Directory", click : function(item,focusedWindow) {
+		var template = electron_renderer_Remote.shell;
+		var template1 = js_node_Path.dirname(electron_renderer_Remote.app.getPath("module"));
+		template.openPath(template1);
+	}},{ type : "separator"},{ label : "&Toggle Developer Tools", accelerator : "F12", role : "toggleDevTools"}]}];
 	var menu = electron_renderer_Remote.Menu.buildFromTemplate(template);
+	MenuBuilder.recentMenu = menu.getMenuItemById("recent").submenu;
+	MenuBuilder.exportMenu = menu.getMenuItemById("export");
 	return menu;
 };
 var Std = function() { };
@@ -217,9 +253,46 @@ TabOperation.closeOthers = function() {
 		}
 	}
 };
+TabOperation.reload = function() {
+	var item = FocusManager.get_focusedItem();
+	if(item == null) {
+		return;
+	}
+	if(item.isComponent) {
+		FileOperation.reload(item);
+	}
+};
 TabOperation.closeAll = function() {
 	TabOperation.closeOthers();
 	TabOperation.close();
+};
+TabOperation.next = function() {
+	var item = FocusManager.get_focusedItem();
+	if(item == null) {
+		return;
+	}
+	if(item.parent == null || !item.parent.isStack) {
+		return;
+	}
+	var index = item.parent.contentItems.indexOf(item);
+	var length = item.parent.contentItems.length;
+	var targetItem = item.parent.contentItems[(index + 1) % length];
+	item.parent.setActiveContentItem(targetItem);
+	targetItem.element.focus();
+};
+TabOperation.prev = function() {
+	var item = FocusManager.get_focusedItem();
+	if(item == null) {
+		return;
+	}
+	if(item.parent == null || !item.parent.isStack) {
+		return;
+	}
+	var index = item.parent.contentItems.indexOf(item);
+	var length = item.parent.contentItems.length;
+	var targetItem = item.parent.contentItems[(index + length - 1) % length];
+	item.parent.setActiveContentItem(targetItem);
+	targetItem.element.focus();
 };
 var electron_renderer_IpcRenderer = require("electron").ipcRenderer;
 var electron_renderer_Remote = require("electron").remote;

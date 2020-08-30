@@ -1,14 +1,22 @@
 .lm_content {
 	display: flex;
+    flex-direction: column;
+}
+.vilog-log {
+	width:100%;
+	flex: 0.1 0 auto;
+	min-height: 50px;
+	margin: 0;
+	padding: 0;
 }
 .vilog-player {
-	height:100%;
 	width:100%;
 	border: none;
 	display: flex;
     flex-direction: column;
+	flex: 1 1 auto
 }
-.vilog-player .vi-row {
+.vilog-player .vi-content {
 	flex: 1 1 0;
 	overflow: auto;
 	display: flex;
@@ -17,6 +25,7 @@
 }
 .vilog-player .vi-foot {
 	flex: none;
+	display: flex;
 }
 .lm_content:focus {
 	outline:0

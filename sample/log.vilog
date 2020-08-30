@@ -1,0 +1,15 @@
+canvas 30 30
+text_style "Arial" 26 bold normal center middle
+background
+    fill_style #F3F3F3
+    fill_rect 2 2 26 26
+    trace background
+end
+fill_style #55AADF
+fill_text "1" 15 15
+info step1
+step
+fill_text "2" 15 15
+warn step2
+error step2
+step

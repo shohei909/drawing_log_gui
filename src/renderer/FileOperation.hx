@@ -2,6 +2,7 @@ package ;
 import electron.main.Dialog;
 import electron.renderer.Remote;
 import golden_layout.ContentItem;
+import js.Browser;
 import js.Node;
 import js.node.Path;
 
@@ -38,6 +39,7 @@ class FileOperation
 			var target = existing[0];
 			if (target.parent != null && target.parent.isStack)
 			{
+				reload(target);
 				target.parent.setActiveContentItem(target);
 			}
 		}
@@ -50,6 +52,14 @@ class FileOperation
 			}
 			stack.addChild(Main.createFileContent(path));
 		}
+	}
+	public static function reload(contentItem:ContentItem):Void
+	{
+		var id = "player_" + contentItem.config.id;
+		var element = Browser.document.getElementById(id);
+		var player = Vilog.getPlayer(element);
+		var image:VilogImage = Vilog.getImage(element.getElementsByClassName("vilog").item(0));
+		image.loadFile(untyped contentItem.config.componentState.path);
 	}
 	
 	private static function openFiles(event:Dynamic):Void 
