@@ -37,7 +37,8 @@ typings/
 node_modules
 
 #electron
-bin/dist
+bin/dist*
+bin/bin
 
 # Haxe
 hxclasses

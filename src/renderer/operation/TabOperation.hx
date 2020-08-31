@@ -51,7 +51,9 @@ class TabOperation
 		{
 			element.style.width = width * scale + "px";
 			element.style.height = height * scale + "px";
+			element.style.imageRendering = if (1 < scale) "pixelated" else "";
 		}
+		
 	}
 	public static function zoomReset():Void
 	{

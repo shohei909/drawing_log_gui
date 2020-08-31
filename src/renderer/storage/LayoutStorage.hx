@@ -10,43 +10,40 @@ import sys.io.File;
 
 class LayoutStorage 
 {
-	private static var DIR:String = untyped Remote.app.getPath("userData") + "/state/layout";
-	private static function save(key:String):Void
+	private static var PATH:String = untyped Remote.app.getPath("userData") + "/state/layout.json";
+	private static function save():Void
 	{
-		if (!FileSystem.exists(DIR))
+		var dir = Path.dirname(PATH);
+		if (!FileSystem.exists(dir))
 		{
-			FileSystem.createDirectory(DIR);
+			FileSystem.createDirectory(dir);
 		}
 		
-		var path = DIR + "/" + key + ".json";
 		if (Main.goldenLayout.isInitialised)
 		{
 			var content:Array<ItemConfig> = Main.goldenLayout.toConfig().content;
-			File.saveContent(path, Json.stringify(content[0]));
+			File.saveContent(PATH, Json.stringify(content[0]));
 		}
 	}
-	public static function load(browserWindow:BrowserWindow, fileNames:Array<String>, key:String):ItemConfig
+	public static function load(browserWindow:BrowserWindow, fileNames:Array<String>):ItemConfig
 	{
 		browserWindow.on(
 			BrowserWindowEvent.close,
-			function ()
-			{
-				save(key);
-			}
+			save
 		);
-		var path = DIR + "/" + key + ".json";
 		return if (fileNames.length == 0)
 		{
-			if (FileSystem.exists(path))
+			if (FileSystem.exists(PATH))
 			{
-				Json.parse(File.getContent(path));
-			}
-			else
+				try {
+					var data = Json.parse(File.getContent(PATH));
+					if (data.content != null)
+					return data;
+				} catch (d:Dynamic) {}
+			} 
 			{
-				{
-					type: "stack",
-					content: []
-				}
+				type: "stack",
+				content: []
 			}
 		}
 		else

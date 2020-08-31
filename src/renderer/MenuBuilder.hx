@@ -8,13 +8,12 @@ import electron.renderer.Remote;
 import js.node.Path;
 import operation.FileOperation;
 import operation.TabOperation;
+import storage.RecentStorage;
+import sys.FileSystem;
 
 class MenuBuilder 
 {
-	public static var recentMenu:Menu;
-	public static var exportMenu:MenuItem;
-	
-	public static function build():Menu
+	public static function updateMenu():Void 
 	{
 		var template:Array<Dynamic> = [
 			{
@@ -29,14 +28,49 @@ class MenuBuilder
 					},
 					{
 						id: "recent",
-						label: '&Recent Files',
-						submenu: [],
+						label: 'Re&cent Files',
+						submenu: [
+							for (path in RecentStorage.history)
+							{
+								label: path,
+								click: function(item, focusedWindow) {
+									if (FileSystem.exists(path))
+									{
+										FileOperation.openFile(path);
+									}
+									else
+									{
+										var dialog = untyped Remote.dialog;
+										dialog.showMessageBox({
+											title: 'File not found',
+											message: 'File not found: ' + path,
+										});	
+										RecentStorage.remove(path);
+									}
+								},
+							}
+						],
+					},
+					{ type: 'separator' },
+					{
+						label: 'Export &Animation PNG',
+						accelerator: 'CommandOrControl+P',
+						click: FileOperation.exportAnimationPng,
 					},
 					{
-						id: "export",
-						label: '&Export',
-						accelerator: 'CommandOrControl+E',
-						click: FileOperation.export,
+						label: 'Export &Sequencial PNG',
+						accelerator: 'CommandOrControl+Shift+P',
+						click: FileOperation.exportSequencialPng,
+					},
+					{
+						label: 'Export Animation &GIF',
+						accelerator: 'CommandOrControl+G',
+						click: FileOperation.exportAnimationGif,
+					},
+					{
+						label: '&Export AVI Video',
+						accelerator: 'CommandOrControl+Shift+A',
+						click: FileOperation.exportAvi,
 					},
 					{ type: 'separator' },
 					{
@@ -164,9 +198,7 @@ class MenuBuilder
 		];
 		var menu:Menu = untyped Remote.Menu.buildFromTemplate(template);
 		
-		recentMenu = menu.getMenuItemById("recent").submenu;
-		exportMenu = menu.getMenuItemById("export");
-		
-		return menu;
+		var currentWindow = Remote.getCurrentWindow();
+		currentWindow.setMenu(menu);
 	}	
 }

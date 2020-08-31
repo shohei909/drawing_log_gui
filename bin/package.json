@@ -1,28 +1,53 @@
 {
 	"main": "main.js",
 	"version": "1.0.0",
-	"author": "shohei909",
+	"author": {
+		"name": "shohei909",
+		"email": "909mmsphere@gmail.com"
+	},
 	"description": "Viewer for Visual Log(.vilog)",
 	"name": "VisualLogViewer",
 	"dependencies": {
-		"golden-layout": "^1.5.9"
+		"golden-layout": "1.5.9",
+		"hasbin": "1.2.3"
 	},
 	"devDependencies": {
 		"electron": "9.2.0",
 		"electron-builder": "22.4.0"
 	},
 	"build": {
-		"extraMetadata": {
-			"main": "./main.js"
-		},
 		"appId": "net.corge.vilog.viewer",
 		"fileAssociations": [
 			{
-				"ext": ["vilog"],
+				"ext": [
+					"vilog"
+				],
 				"name": "VisualLog",
 				"role": "Viewer"
 			}
 		],
+		"win": {
+			"target": {
+				"target": "nsis",
+				"arch": [
+					"ia32",
+					"x64"
+				]
+			}
+		},
+		"linux": {
+			"target": [
+				"deb",
+				"tar.gz"
+			]
+		},
+		"directories": {
+			"output": "dist_${os}"
+		},
+		"extraFiles": {
+			"from": "bin/${os}/${arch}",
+			"to": "bin"
+		},
 		"files": [
 			"index.html",
 			"icon.png",
@@ -30,8 +55,10 @@
 			"renderer.js",
 			"vilog.min.js",
 			"*.css",
+			"splitjs/*",
 			"fonts/*"
 		]
 	},
+	"homepage": "https://vilog.corge.net",
 	"license": "MIT"
 }

@@ -45,25 +45,27 @@ class WindowStorage
 		var path = DIR + "/" + key + ".json";
 		if (FileSystem.exists(path))
 		{
-			var data:WindowStorageData = Json.parse(File.getContent(path));
-			browserWindow.setBounds({
-				x           : data.x     ,
-				y           : data.y     ,
-				width       : data.width ,
-				height      : data.height,
-			});
-			if (data.isMaximized)
-			{
-				browserWindow.maximize();
-			}
-			if (data.isMinimized)
-			{
-				browserWindow.minimize();
-			}
-			if (data.isFullScreen)
-			{
-				browserWindow.setFullScreen(true);
-			}
+			try {
+				var data:WindowStorageData = Json.parse(File.getContent(path));
+				browserWindow.setBounds({
+					x           : data.x     ,
+					y           : data.y     ,
+					width       : data.width ,
+					height      : data.height,
+				});
+				if (data.isMaximized)
+				{
+					browserWindow.maximize();
+				}
+				if (data.isMinimized)
+				{
+					browserWindow.minimize();
+				}
+				if (data.isFullScreen)
+				{
+					browserWindow.setFullScreen(true);
+				}
+			} catch (d:Dynamic) {}
 		}
 	}
 }

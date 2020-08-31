@@ -33,11 +33,25 @@ FocusManager.isAlive = function(element) {
 FocusManager.focus = function(container) {
 	FocusManager.focusedItem = container.parent;
 };
+var HxOverrides = function() { };
+HxOverrides.__name__ = true;
+HxOverrides.remove = function(a,obj) {
+	var i = a.indexOf(obj);
+	if(i == -1) {
+		return false;
+	}
+	a.splice(i,1);
+	return true;
+};
+HxOverrides.now = function() {
+	return Date.now();
+};
 var Main = function() { };
 Main.__name__ = true;
 Main.main = function() {
 	var currentWindow = electron_renderer_Remote.getCurrentWindow();
-	currentWindow.setMenu(MenuBuilder.build());
+	storage_RecentStorage.load(currentWindow);
+	MenuBuilder.updateMenu();
 	electron_renderer_IpcRenderer.on("init",Main.init);
 };
 Main.init = function(event,fileNames) {
@@ -47,7 +61,7 @@ Main.init = function(event,fileNames) {
 	Vilog.changeKeyboardMode(1);
 	window.$ = window.jQuery = require("jquery");
 	window.GoldenLayout = require("golden-layout");
-	var contents = storage_LayoutStorage.load(electron_renderer_Remote.getCurrentWindow(),fileNames,"main");
+	var contents = storage_LayoutStorage.load(electron_renderer_Remote.getCurrentWindow(),fileNames);
 	var config = { settings : { showPopoutIcon : false, showMaximiseIcon : false}, content : [contents]};
 	Main.goldenLayout = new GoldenLayout(config);
 	Main.goldenLayout.registerComponent("file",Main.openFile);
@@ -91,33 +105,39 @@ Main.onOpen = function(container) {
 	var imageElement = playerElement.getElementsByClassName("vilog").item(0);
 	var image = Vilog.getImage(imageElement);
 	var path = config.componentState.path;
+	var logElement = container.getElement().get(0).getElementsByClassName("vilog-log").item(0);
+	image.addLogger(new VilogElementLogger(path,vilog_enums_VilogLogLevel.All,logElement));
+	var initialized = false;
 	image.stream.addChangeHandler(function() {
 		var scale = config.scale == null || config.scale == 0 ? 1.0 : config.scale;
 		operation_TabOperation.applyZoom(container.getElement().get(0).getElementsByClassName("vi-image").item(0),scale);
+		if(!initialized) {
+			var split = require("./splitjs/split.min.js");
+			split([playerElement,logElement],{ direction : "vertical", sizes : config.componentState.sizes, gutterSize : 7});
+			initialized = true;
+		}
 	});
 	image.loadFile(path);
-	var logElement = container.getElement().get(0).getElementsByClassName("vilog-log").item(0);
-	image.addLogger(new VilogElementLogger(path,vilog_enums_VilogLogLevel.All,logElement));
 	var container1 = container;
 	var tmp = function() {
 		FocusManager.focus(container1);
 	};
 	container.on("show",tmp);
 	var container2 = container;
-	playerElement.addEventListener("focus",function() {
+	var tmp = function() {
 		FocusManager.focus(container2);
-	});
+	};
+	playerElement.addEventListener("focus",tmp);
 	var container3 = container;
 	var tmp = function() {
 		Main.onFocus(container3);
 	};
 	container.on("show",tmp);
 	var container4 = container;
-	playerElement.addEventListener("focus",function() {
+	var tmp = function() {
 		Main.onFocus(container4);
-	});
-	var split = require("./splitjs/split.min.js");
-	split([playerElement,logElement],{ direction : "vertical", sizes : config.componentState.sizes, gutterSize : 7});
+	};
+	playerElement.addEventListener("focus",tmp);
 	FocusManager.focus(container);
 	Main.onFocus(container);
 };
@@ -131,8 +151,26 @@ Main.onFocus = function(container) {
 Math.__name__ = true;
 var MenuBuilder = function() { };
 MenuBuilder.__name__ = true;
-MenuBuilder.build = function() {
-	var template = [{ label : "&File", id : "file", role : "fileMenu", submenu : [{ label : "&Open", accelerator : "CommandOrControl+O", click : operation_FileOperation.open},{ id : "recent", label : "&Recent Files", submenu : []},{ id : "export", label : "&Export", accelerator : "CommandOrControl+E", click : operation_FileOperation.export},{ type : "separator"},{ label : "&Restart", click : function(item,focusedWindow) {
+MenuBuilder.updateMenu = function() {
+	var _g = [];
+	var _g1 = 0;
+	var _g2 = storage_RecentStorage.history;
+	while(_g1 < _g2.length) {
+		var path = [_g2[_g1]];
+		++_g1;
+		_g.push({ label : path[0], click : (function(path) {
+			return function(item,focusedWindow) {
+				if(sys_FileSystem.exists(path[0])) {
+					operation_FileOperation.openFile(path[0]);
+				} else {
+					var dialog = electron_renderer_Remote.dialog;
+					dialog.showMessageBox({ title : "File not found", message : "File not found: " + path[0]});
+					storage_RecentStorage.remove(path[0]);
+				}
+			};
+		})(path)});
+	}
+	var template = [{ label : "&File", id : "file", role : "fileMenu", submenu : [{ label : "&Open", accelerator : "CommandOrControl+O", click : operation_FileOperation.open},{ id : "recent", label : "Re&cent Files", submenu : _g},{ type : "separator"},{ label : "Export &Animation PNG", accelerator : "CommandOrControl+P", click : operation_FileOperation.exportAnimationPng},{ label : "Export &Sequencial PNG", accelerator : "CommandOrControl+Shift+P", click : operation_FileOperation.exportSequencialPng},{ label : "Export Animation &GIF", accelerator : "CommandOrControl+G", click : operation_FileOperation.exportAnimationGif},{ label : "&Export AVI Video", accelerator : "CommandOrControl+Shift+A", click : operation_FileOperation.exportAvi},{ type : "separator"},{ label : "&Restart", click : function(item,focusedWindow) {
 		electron_renderer_Remote.app.relaunch({ });
 		electron_renderer_Remote.app.exit();
 	}}]},{ label : "&View", id : "file", role : "viewMenu", submenu : [{ label : "&Close Tab", accelerator : "CommandOrControl+W", click : operation_TabOperation.close},{ label : "Close &Other Tabs", accelerator : "CommandOrControl+Shift+W", click : operation_TabOperation.closeOthers},{ label : "Close &All Tabs", accelerator : "CommandOrControl+Alt+W", click : operation_TabOperation.closeAll},{ type : "separator"},{ label : "&Next Tab", accelerator : "CommandOrControl+Tab", click : operation_TabOperation.next},{ label : "&Previous Tab", accelerator : "CommandOrControl+Shift+Tab", click : operation_TabOperation.prev},{ type : "separator"},{ label : "&Reload Tab", accelerator : "F5", click : operation_TabOperation.reload},{ type : "separator"},{ label : "Open &Directory", accelerator : "Alt+Shift+R", click : function(item,focusedWindow) {
@@ -160,9 +198,8 @@ MenuBuilder.build = function() {
 		template.openPath(template1);
 	}},{ type : "separator"},{ label : "&Toggle Developer Tools", accelerator : "F12", role : "toggleDevTools"}]}];
 	var menu = electron_renderer_Remote.Menu.buildFromTemplate(template);
-	MenuBuilder.recentMenu = menu.getMenuItemById("recent").submenu;
-	MenuBuilder.exportMenu = menu.getMenuItemById("export");
-	return menu;
+	var currentWindow = electron_renderer_Remote.getCurrentWindow();
+	currentWindow.setMenu(menu);
 };
 var Std = function() { };
 Std.__name__ = true;
@@ -380,6 +417,7 @@ js_jquery_JqIterator.prototype = {
 		return this.j[this.i++];
 	}
 };
+var js_node_ChildProcess = require("child_process");
 var js_node_Fs = require("fs");
 var js_node_KeyValue = {};
 js_node_KeyValue.get_key = function(this1) {
@@ -419,6 +457,7 @@ operation_FileOperation.open = function() {
 };
 operation_FileOperation.openFile = function(path) {
 	var path1 = js_node_Path.resolve(path);
+	storage_RecentStorage.add(path1);
 	var existing = Main.goldenLayout.root.getItemsByFilter(function(item) {
 		var state = item.config.componentState;
 		if(state == null) {
@@ -433,12 +472,15 @@ operation_FileOperation.openFile = function(path) {
 			target.parent.setActiveContentItem(target);
 		}
 	} else {
-		var stack = operation_FileOperation.findStackFromBottom(FocusManager.get_focusedItem());
-		if(stack == null) {
-			stack = operation_FileOperation.findStackFromTop(Main.goldenLayout.root);
-		}
-		stack.addChild(storage_LayoutStorage.createFileContent(path1));
+		operation_FileOperation.resolveStack().addChild(storage_LayoutStorage.createFileContent(path1));
 	}
+};
+operation_FileOperation.resolveStack = function() {
+	var stack = operation_FileOperation.findStackFromBottom(FocusManager.get_focusedItem());
+	if(stack == null) {
+		stack = operation_FileOperation.findStackFromTop(Main.goldenLayout.root);
+	}
+	return stack;
 };
 operation_FileOperation.reload = function(contentItem) {
 	var id = "player_" + contentItem.config.id;
@@ -482,7 +524,114 @@ operation_FileOperation.findStackFromTop = function(item) {
 	}
 	return operation_FileOperation.findStackFromTop(item.contentItems[0]);
 };
-operation_FileOperation.export = function() {
+operation_FileOperation.exportSequencialPng = function() {
+	operation_FileOperation.openExportDialog("Sequencial PNG image","png","[].png","--png");
+};
+operation_FileOperation.exportAnimationPng = function() {
+	operation_FileOperation.openExportDialog("Animation PNG image","png",".png","--apng");
+};
+operation_FileOperation.exportAnimationGif = function() {
+	operation_FileOperation.openExportDialog("Animation GIF image","gif",".gif","--gif");
+};
+operation_FileOperation.exportAvi = function() {
+	operation_FileOperation.openExportDialog("AVI Video","avi",".avi","--avi");
+};
+operation_FileOperation.openExportDialog = function(filterName,ext,suffix,option) {
+	var executable = operation_FileOperation.getExportExecutable();
+	var dialog = electron_renderer_Remote.dialog;
+	if(executable == null) {
+		operation_FileOperation.showExportError();
+		return;
+	}
+	$global.console.log("Command `" + executable + "` will be used.");
+	var item = FocusManager.get_focusedItem();
+	if(item != null) {
+		var path = item.config.componentState.path;
+		var inputPath = path;
+		var option1 = option;
+		var tmp = function(event) {
+			operation_FileOperation.export(inputPath,option1,event);
+		};
+		dialog.showSaveDialog(electron_renderer_Remote.getCurrentWindow(),{ defaultPath : js_node_Path.join(js_node_Path.dirname(path),js_node_Path.basename(path,js_node_Path.extname(path)) + suffix), properties : ["createDirectory","showOverwriteConfirmation"], filters : [{ name : filterName, extensions : [ext]}]}).then(tmp);
+	} else {
+		dialog.showMessageBox({ title : "No file is selected", message : "No file is selected"});
+	}
+};
+operation_FileOperation.showExportError = function() {
+	var dialog = electron_renderer_Remote.dialog;
+	dialog.showMessageBox({ title : "Command Not Found Error:", message : "`vilog` command is not found.", buttons : ["How to install","OK"]}).then(operation_FileOperation.onExportError);
+};
+operation_FileOperation.onExportError = function(event) {
+	if(event.response == 0) {
+		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/visual_log_cli");
+	}
+};
+operation_FileOperation.export = function(inputPath,option,event) {
+	if(event.canceled) {
+		return;
+	}
+	var exe = operation_FileOperation.getExportExecutable();
+	if(exe == null) {
+		operation_FileOperation.showExportError();
+		return;
+	}
+	var item = FocusManager.get_focusedItem();
+	var logElement = item.element.get(0).getElementsByClassName("vilog-log").item(0);
+	logElement.innerHTML = "";
+	var spawn = js_node_ChildProcess.spawn(exe,["-i",inputPath,option,event.filePath]);
+	var log = function(level,message) {
+		var element = window.document.createElement("pre");
+		element.className = "vi-log-" + level;
+		element.textContent = message;
+		logElement.append(element);
+	};
+	log("info","Exporting...");
+	spawn.stdout.on("data",function(data) {
+		log("info",data);
+	});
+	spawn.stderr.on("data",function(data) {
+		log("warn",data);
+	});
+	spawn.on("close",function(code) {
+		var element = window.document.createElement("pre");
+		if(code == 0) {
+			log("info","Export succeeded!");
+		} else {
+			log("error","Export failed: " + code);
+		}
+		logElement.append(element);
+	});
+};
+operation_FileOperation.getExportExecutable = function() {
+	var name = process.platform == "win32" ? "vilog.exe" : "vilog";
+	var base;
+	if(electron_renderer_Remote.app.isPackaged) {
+		base = js_node_Path.join(js_node_Path.dirname(electron_renderer_Remote.app.getPath("module")),"bin");
+	} else {
+		var os;
+		var _g = process.platform;
+		switch(_g) {
+		case "darwin":
+			os = "mac";
+			break;
+		case "win32":
+			os = "win";
+			break;
+		default:
+			var other = _g;
+			os = other;
+		}
+		base = js_node_Path.join(process.cwd(),"bin",os,process.arch);
+	}
+	var path = js_node_Path.join(base,name);
+	if(sys_FileSystem.exists(path)) {
+		return path;
+	}
+	var hasbin = require("hasbin");
+	if(hasbin.sync("vilog")) {
+		return "vilog";
+	}
+	return null;
 };
 var operation_TabOperation = function() { };
 operation_TabOperation.__name__ = true;
@@ -531,6 +680,7 @@ operation_TabOperation.applyZoom = function(element,scale) {
 	if(width != 0) {
 		element.style.width = width * scale + "px";
 		element.style.height = height * scale + "px";
+		element.style.imageRendering = 1 < scale ? "pixelated" : "";
 	}
 };
 operation_TabOperation.zoomReset = function() {
@@ -615,27 +765,29 @@ operation_TabOperation.prev = function() {
 };
 var storage_LayoutStorage = function() { };
 storage_LayoutStorage.__name__ = true;
-storage_LayoutStorage.save = function(key) {
-	if(!sys_FileSystem.exists(storage_LayoutStorage.DIR)) {
-		sys_FileSystem.createDirectory(storage_LayoutStorage.DIR);
+storage_LayoutStorage.save = function() {
+	var dir = js_node_Path.dirname(storage_LayoutStorage.PATH);
+	if(!sys_FileSystem.exists(dir)) {
+		sys_FileSystem.createDirectory(dir);
 	}
-	var path = storage_LayoutStorage.DIR + "/" + key + ".json";
 	if(Main.goldenLayout.isInitialised) {
 		var content = Main.goldenLayout.toConfig().content;
-		js_node_Fs.writeFileSync(path,JSON.stringify(content[0]));
+		js_node_Fs.writeFileSync(storage_LayoutStorage.PATH,JSON.stringify(content[0]));
 	}
 };
-storage_LayoutStorage.load = function(browserWindow,fileNames,key) {
-	browserWindow.on("close",function() {
-		storage_LayoutStorage.save(key);
-	});
-	var path = storage_LayoutStorage.DIR + "/" + key + ".json";
+storage_LayoutStorage.load = function(browserWindow,fileNames) {
+	browserWindow.on("close",storage_LayoutStorage.save);
 	if(fileNames.length == 0) {
-		if(sys_FileSystem.exists(path)) {
-			return JSON.parse(js_node_Fs.readFileSync(path,{ encoding : "utf8"}));
-		} else {
-			return { type : "stack", content : []};
+		if(sys_FileSystem.exists(storage_LayoutStorage.PATH)) {
+			try {
+				var data = JSON.parse(js_node_Fs.readFileSync(storage_LayoutStorage.PATH,{ encoding : "utf8"}));
+				if(data.content != null) {
+					return data;
+				}
+			} catch( _g ) {
+			}
 		}
+		return { type : "stack", content : []};
 	} else {
 		var _g = [];
 		var _g1 = 0;
@@ -649,6 +801,46 @@ storage_LayoutStorage.load = function(browserWindow,fileNames,key) {
 };
 storage_LayoutStorage.createFileContent = function(path) {
 	return { type : "component", componentName : "file", componentState : { path : js_node_Path.resolve(path), sizes : [80,20]}, id : "f" + Std.random(134217727), title : js_node_Path.basename(path)};
+};
+var storage_RecentStorage = function() { };
+storage_RecentStorage.__name__ = true;
+storage_RecentStorage.save = function() {
+	var dir = js_node_Path.dirname(storage_RecentStorage.PATH);
+	if(!sys_FileSystem.exists(dir)) {
+		sys_FileSystem.createDirectory(dir);
+	}
+	js_node_Fs.writeFileSync(storage_RecentStorage.PATH,JSON.stringify(storage_RecentStorage.history));
+};
+storage_RecentStorage.load = function(browserWindow) {
+	browserWindow.on("close",storage_RecentStorage.save);
+	if(sys_FileSystem.exists(storage_RecentStorage.PATH)) {
+		try {
+			var data = JSON.parse(js_node_Fs.readFileSync(storage_RecentStorage.PATH,{ encoding : "utf8"}));
+			if(data != null) {
+				storage_RecentStorage.history = data;
+			}
+		} catch( _g ) {
+		}
+	}
+};
+storage_RecentStorage.remove = function(path) {
+	if(HxOverrides.remove(storage_RecentStorage.history,path)) {
+		MenuBuilder.updateMenu();
+	}
+};
+storage_RecentStorage.add = function(path) {
+	var index = storage_RecentStorage.history.indexOf(path);
+	if(index == 0) {
+		return;
+	}
+	if(index != -1) {
+		HxOverrides.remove(storage_RecentStorage.history,path);
+	}
+	storage_RecentStorage.history.unshift(path);
+	if(storage_RecentStorage.history.length > 40) {
+		storage_RecentStorage.history.pop();
+	}
+	MenuBuilder.updateMenu();
 };
 var sys_FileSystem = function() { };
 sys_FileSystem.__name__ = true;
@@ -799,6 +991,9 @@ var vilog_enums_VilogLogLevel = $hx_exports["VilogLogLevel"] = {};
 function $iterator(o) { if( o instanceof Array ) return function() { return new haxe_iterators_ArrayIterator(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $global.$haxeUID++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = m.bind(o); o.hx__closures__[m.__id__] = f; } return f; }
 $global.$haxeUID |= 0;
+if(typeof(performance) != "undefined" ? typeof(performance.now) == "function" : false) {
+	HxOverrides.now = performance.now.bind(performance);
+}
 String.__name__ = true;
 Array.__name__ = true;
 js_Boot.__toStr = ({ }).toString;
@@ -814,7 +1009,9 @@ if(typeofJQuery != "undefined" && $.fn != null) {
 		return new js_jquery_JqIterator(this);
 	};
 }
-storage_LayoutStorage.DIR = electron_renderer_Remote.app.getPath("userData") + "/state/layout";
+storage_LayoutStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/layout.json";
+storage_RecentStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/recent.json";
+storage_RecentStorage.history = [];
 vilog_enums_VilogLogLevel.All = 0;
 vilog_enums_VilogLogLevel.Off = 8;
 vilog_enums_VilogLogLevel.Trace = 1;
