@@ -1,4 +1,4 @@
-package;
+package vilog;
 
 @:expose("DrawlogTextStyle") extern class DrawlogTextStyle {
 	var fontFamily(default,null) : String;

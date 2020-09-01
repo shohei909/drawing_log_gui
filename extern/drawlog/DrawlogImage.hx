@@ -1,4 +1,4 @@
-package;
+package vilog;
 
 @:expose("DrawlogImage") extern class DrawlogImage implements DrawlogOutput {
 	var autoPlay : Bool;
@@ -36,7 +36,7 @@ package;
 	function isLoading() : Bool;
 	function lineTo(x : Float, y : Float, isForBackground : Bool) : Void;
 	function loadFile(src : String) : Void;
-	function log(line : Int, message : String, level : drawlog.enums.DrawlogLogLevel, isForBackground : Bool) : Void;
+	function log(line : Int, message : String, level : vilog.enums.DrawlogLogLevel, isForBackground : Bool) : Void;
 	private function onLoadFile(e : js.html.ProgressEvent) : Void;
 	function play() : Void;
 	function quadTo(x0 : Float, y0 : Float, x1 : Float, y1 : Float, isForBackground : Bool) : Void;

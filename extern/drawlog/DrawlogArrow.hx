@@ -1,4 +1,4 @@
-package;
+package vilog;
 
 @:expose("DrawlogArrow") extern class DrawlogArrow {
 	var angle : Float;
