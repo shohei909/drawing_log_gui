@@ -238,6 +238,7 @@ Std.random = function(x) {
 		return Math.floor(Math.random() * x);
 	}
 };
+var drawlog_enums_DrawlogLogLevel = $hx_exports["DrawlogLogLevel"] = {};
 var electron_renderer_IpcRenderer = require("electron").ipcRenderer;
 var electron_renderer_Remote = require("electron").remote;
 var haxe_Exception = function(message,previous,native) {
@@ -1058,7 +1059,6 @@ var sys_io_FileSeek = $hxEnums["sys.io.FileSeek"] = { __ename__ : true, __constr
 	,SeekCur: {_hx_index:1,__enum__:"sys.io.FileSeek",toString:$estr}
 	,SeekEnd: {_hx_index:2,__enum__:"sys.io.FileSeek",toString:$estr}
 };
-var drawlog_enums_DrawlogLogLevel = $hx_exports["DrawlogLogLevel"] = {};
 function $iterator(o) { if( o instanceof Array ) return function() { return new haxe_iterators_ArrayIterator(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $global.$haxeUID++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = m.bind(o); o.hx__closures__[m.__id__] = f; } return f; }
 $global.$haxeUID |= 0;
@@ -1080,15 +1080,15 @@ if(typeofJQuery != "undefined" && $.fn != null) {
 		return new js_jquery_JqIterator(this);
 	};
 }
-locale_Locale.resources = [];
-storage_LayoutStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/layout.json";
-storage_RecentStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/recent.json";
-storage_RecentStorage.history = [];
 drawlog_enums_DrawlogLogLevel.All = 0;
 drawlog_enums_DrawlogLogLevel.Off = 8;
 drawlog_enums_DrawlogLogLevel.Trace = 1;
 drawlog_enums_DrawlogLogLevel.Info = 3;
 drawlog_enums_DrawlogLogLevel.Warn = 5;
 drawlog_enums_DrawlogLogLevel.Error = 7;
+locale_Locale.resources = [];
+storage_LayoutStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/layout.json";
+storage_RecentStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/recent.json";
+storage_RecentStorage.history = [];
 Main.main();
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
