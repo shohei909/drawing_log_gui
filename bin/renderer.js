@@ -729,7 +729,7 @@ operation_TabOperation.zoom = function(value) {
 	var item = FocusManager.get_focusedItem();
 	var element = item.element.get(0).getElementsByClassName("vi-image").item(0);
 	var scale = item.config.scale == null || item.config.scale == 0 ? 1.0 : item.config.scale;
-	if(1 <= value || 0.25 <= scale) {
+	if(1 <= value || 0.1 <= scale) {
 		scale *= value;
 		item.config.scale = scale;
 		operation_TabOperation.applyZoom(element,scale);

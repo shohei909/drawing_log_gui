@@ -44,10 +44,13 @@
 		"directories": {
 			"output": "dist_${os}"
 		},
-		"extraFiles": {
-			"from": "bin/${os}/${arch}",
-			"to": "bin"
-		},
+		"extraFiles": [
+			{
+				"from": "bin/${os}/${arch}",
+				"to": "bin"
+			},
+			"locale/*.json"
+		],
 		"files": [
 			"index.html",
 			"icon.png",

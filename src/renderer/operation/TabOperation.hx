@@ -28,7 +28,7 @@ class TabOperation
 		var item = FocusManager.focusedItem;
 		var element = item.element.get(0).getElementsByClassName("vi-image").item(0);
 		var scale:Float = untyped if (item.config.scale == null || item.config.scale == 0) 1.0 else item.config.scale;
-		if (1 <= value || 0.25 <= scale)
+		if (1 <= value || 0.1 <= scale)
 		{
 			scale *= value;
 			untyped item.config.scale = scale;
