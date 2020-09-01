@@ -1,7 +1,7 @@
-package vilog.enums;
+package drawlog.enums;
 
-@:expose("VilogDrawStyleKind")
-enum abstract VilogDrawStyleKind(Int) 
+@:expose("DrawlogDrawStyleKind")
+enum abstract DrawlogDrawStyleKind(Int) 
 {
 	var Fill = 0;
 	var Line = 1;

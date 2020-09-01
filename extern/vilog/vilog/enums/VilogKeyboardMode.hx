@@ -1,7 +1,7 @@
-package vilog.enums;
+package drawlog.enums;
 
-@:expose("VilogKeyboardMode")
-enum abstract VilogKeyboardMode(Int)
+@:expose("DrawlogKeyboardMode")
+enum abstract DrawlogKeyboardMode(Int)
 {
 	var Always        = 0;
 	var FocusedOrBody = 1;

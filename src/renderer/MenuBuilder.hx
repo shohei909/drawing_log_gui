@@ -157,13 +157,13 @@ class MenuBuilder
 					{
 						label: Locale.get(StringKey.menu_help_github),
 						click: function(item, focusedWindow) {
-							untyped Remote.shell.openExternal("https://github.com/shohei909/visual_log_viewer");
+							untyped Remote.shell.openExternal("https://github.com/shohei909/drawing_log_viewer");
 						}
 					},
 					{
 						label: Locale.get(StringKey.menu_help_doc),
 						click: function(item, focusedWindow) {
-							untyped Remote.shell.openExternal("http://vilog.corge.net/");
+							untyped Remote.shell.openExternal("http://drawlog.corge.net/");
 						}
 					},
 					{
@@ -171,8 +171,8 @@ class MenuBuilder
 						click: function(item, focusedWindow) {
 							var dialog = untyped Remote.dialog;
 							dialog.showMessageBox({
-								title: 'About Visual Log Viewer',
-								message: 'Visual Log Viewer: ' + untyped Remote.app.getVersion()
+								title: 'About Drawing Log Viewer',
+								message: 'Drawing Log Viewer: ' + untyped Remote.app.getVersion()
 							});	
 						}
 					},

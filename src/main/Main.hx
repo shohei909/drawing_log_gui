@@ -28,7 +28,7 @@ class Main
 				enableRemoteModule: true,
 				preload: Node.__dirname + '/renderer.js',
 			},
-			title: "Visual Log Viewer",
+			title: "Drawing Log Viewer",
 			autoHideMenuBar: false,
 			show : true,
 			icon : Node.__dirname + "/icon.png",

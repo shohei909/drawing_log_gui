@@ -56,10 +56,10 @@ Main.main = function() {
 	electron_renderer_IpcRenderer.on("init",Main.init);
 };
 Main.init = function(event,fileNames) {
-	var vilog = require("./vilog.min.js");
-	window.Vilog = vilog.Vilog;
-	window.VilogElementLogger = vilog.VilogElementLogger;
-	Vilog.changeKeyboardMode(1);
+	var drawlog = require("./drawlog.min.js");
+	window.Drawlog = drawlog.Drawlog;
+	window.DrawlogElementLogger = drawlog.DrawlogElementLogger;
+	Drawlog.changeKeyboardMode(1);
 	window.$ = window.jQuery = require("jquery");
 	window.GoldenLayout = require("golden-layout");
 	var contents = storage_LayoutStorage.load(electron_renderer_Remote.getCurrentWindow(),fileNames);
@@ -91,7 +91,7 @@ Main.openFile = function(container,componentState) {
 	var element = container.getElement().get(0);
 	element.tabIndex = 0;
 	var id = "player_" + container.parent.config.id;
-	container.getElement().get(0).innerHTML = "\r\n<div id=\"" + id + "\" class=\"vilog-player\">\r\n<div class=\"vi-row vi-content\"><div class=\"vilog\"></div></div>\r\n</div>\r\n<code class=\"vilog-log\"></code>\r\n";
+	container.getElement().get(0).innerHTML = "\r\n<div id=\"" + id + "\" class=\"drawlog-player\">\r\n<div class=\"vi-row vi-content\"><div class=\"drawlog\"></div></div>\r\n</div>\r\n<code class=\"drawlog-log\"></code>\r\n";
 	var container1 = container;
 	container.on("show",function() {
 		Main.onOpen(container1);
@@ -102,12 +102,12 @@ Main.onOpen = function(container) {
 	var config = container.parent.config;
 	var id = "player_" + config.id;
 	var playerElement = window.document.getElementById(id);
-	var player = Vilog.getPlayer(playerElement);
-	var imageElement = playerElement.getElementsByClassName("vilog").item(0);
-	var image = Vilog.getImage(imageElement);
+	var player = Drawlog.getPlayer(playerElement);
+	var imageElement = playerElement.getElementsByClassName("drawlog").item(0);
+	var image = Drawlog.getImage(imageElement);
 	var path = config.componentState.path;
-	var logElement = container.getElement().get(0).getElementsByClassName("vilog-log").item(0);
-	image.addLogger(new VilogElementLogger(path,vilog_enums_VilogLogLevel.All,logElement));
+	var logElement = container.getElement().get(0).getElementsByClassName("drawlog-log").item(0);
+	image.addLogger(new DrawlogElementLogger(path,drawlog_enums_DrawlogLogLevel.All,logElement));
 	var initialized = false;
 	image.stream.addChangeHandler(function() {
 		var scale = config.scale == null || config.scale == 0 ? 1.0 : config.scale;
@@ -203,15 +203,15 @@ MenuBuilder.updateMenu = function() {
 	var template11 = locale_Locale.get("menu_view_zoom_reset");
 	var template12 = locale_Locale.get("menu_help");
 	var template13 = { label : locale_Locale.get("menu_help_github"), click : function(item,focusedWindow) {
-		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/visual_log_viewer");
+		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/drawing_log_viewer");
 	}};
 	var template14 = { label : locale_Locale.get("menu_help_doc"), click : function(item,focusedWindow) {
-		electron_renderer_Remote.shell.openExternal("http://vilog.corge.net/");
+		electron_renderer_Remote.shell.openExternal("http://drawlog.corge.net/");
 	}};
 	var template15 = { label : locale_Locale.get("menu_help_ver"), click : function(item,focusedWindow) {
 		var dialog = electron_renderer_Remote.dialog;
-		var template = "Visual Log Viewer: " + electron_renderer_Remote.app.getVersion();
-		dialog.showMessageBox({ title : "About Visual Log Viewer", message : template});
+		var template = "Drawing Log Viewer: " + electron_renderer_Remote.app.getVersion();
+		dialog.showMessageBox({ title : "About Drawing Log Viewer", message : template});
 	}};
 	var template16 = { label : locale_Locale.get("menu_help_storage_dir"), click : function(item,focusedWindow) {
 		var template = electron_renderer_Remote.shell;
@@ -524,7 +524,7 @@ operation_FileOperation.__name__ = true;
 operation_FileOperation.open = function() {
 	var dialog = electron_renderer_Remote.dialog;
 	var openDialog = electron_renderer_Remote.getCurrentWindow();
-	var openDialog1 = dialog.showOpenDialog(openDialog,{ properties : ["openFile","multiSelections"], filters : [{ name : "Visual Log", extensions : ["vilog"]}]}).then(operation_FileOperation.openFiles);
+	var openDialog1 = dialog.showOpenDialog(openDialog,{ properties : ["openFile","multiSelections"], filters : [{ name : "Drawing Log", extensions : ["drawlog"]}]}).then(operation_FileOperation.openFiles);
 };
 operation_FileOperation.openFile = function(path) {
 	var path1 = js_node_Path.resolve(path);
@@ -556,8 +556,8 @@ operation_FileOperation.resolveStack = function() {
 operation_FileOperation.reload = function(contentItem) {
 	var id = "player_" + contentItem.config.id;
 	var element = window.document.getElementById(id);
-	var player = Vilog.getPlayer(element);
-	var image = Vilog.getImage(element.getElementsByClassName("vilog").item(0));
+	var player = Drawlog.getPlayer(element);
+	var image = Drawlog.getImage(element.getElementsByClassName("drawlog").item(0));
 	image.loadFile(contentItem.config.componentState.path);
 };
 operation_FileOperation.openFiles = function(event) {
@@ -630,11 +630,11 @@ operation_FileOperation.openExportDialog = function(filterName,ext,suffix,option
 };
 operation_FileOperation.showExportError = function() {
 	var dialog = electron_renderer_Remote.dialog;
-	dialog.showMessageBox({ title : "Command Not Found Error:", message : "`vilog` command is not found.", buttons : ["How to install","OK"]}).then(operation_FileOperation.onExportError);
+	dialog.showMessageBox({ title : "Command Not Found Error:", message : "`drawlog` command is not found.", buttons : ["How to install","OK"]}).then(operation_FileOperation.onExportError);
 };
 operation_FileOperation.onExportError = function(event) {
 	if(event.response == 0) {
-		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/visual_log_cli");
+		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/drawing_log_cli");
 	}
 };
 operation_FileOperation.export = function(inputPath,option,event) {
@@ -647,7 +647,7 @@ operation_FileOperation.export = function(inputPath,option,event) {
 		return;
 	}
 	var item = FocusManager.get_focusedItem();
-	var logElement = item.element.get(0).getElementsByClassName("vilog-log").item(0);
+	var logElement = item.element.get(0).getElementsByClassName("drawlog-log").item(0);
 	logElement.innerHTML = "";
 	var spawn = js_node_ChildProcess.spawn(exe,["-i",inputPath,option,event.filePath]);
 	var log = function(level,message) {
@@ -674,7 +674,7 @@ operation_FileOperation.export = function(inputPath,option,event) {
 	});
 };
 operation_FileOperation.getExportExecutable = function() {
-	var name = process.platform == "win32" ? "vilog.exe" : "vilog";
+	var name = process.platform == "win32" ? "drawlog.exe" : "drawlog";
 	var base;
 	if(electron_renderer_Remote.app.isPackaged) {
 		base = js_node_Path.join(js_node_Path.dirname(electron_renderer_Remote.app.getPath("module")),"bin");
@@ -699,8 +699,8 @@ operation_FileOperation.getExportExecutable = function() {
 		return path;
 	}
 	var hasbin = require("hasbin");
-	if(hasbin.sync("vilog")) {
-		return "vilog";
+	if(hasbin.sync("drawlog")) {
+		return "drawlog";
 	}
 	return null;
 };
@@ -1058,7 +1058,7 @@ var sys_io_FileSeek = $hxEnums["sys.io.FileSeek"] = { __ename__ : true, __constr
 	,SeekCur: {_hx_index:1,__enum__:"sys.io.FileSeek",toString:$estr}
 	,SeekEnd: {_hx_index:2,__enum__:"sys.io.FileSeek",toString:$estr}
 };
-var vilog_enums_VilogLogLevel = $hx_exports["VilogLogLevel"] = {};
+var drawlog_enums_DrawlogLogLevel = $hx_exports["DrawlogLogLevel"] = {};
 function $iterator(o) { if( o instanceof Array ) return function() { return new haxe_iterators_ArrayIterator(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $global.$haxeUID++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = m.bind(o); o.hx__closures__[m.__id__] = f; } return f; }
 $global.$haxeUID |= 0;
@@ -1084,11 +1084,11 @@ locale_Locale.resources = [];
 storage_LayoutStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/layout.json";
 storage_RecentStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/recent.json";
 storage_RecentStorage.history = [];
-vilog_enums_VilogLogLevel.All = 0;
-vilog_enums_VilogLogLevel.Off = 8;
-vilog_enums_VilogLogLevel.Trace = 1;
-vilog_enums_VilogLogLevel.Info = 3;
-vilog_enums_VilogLogLevel.Warn = 5;
-vilog_enums_VilogLogLevel.Error = 7;
+drawlog_enums_DrawlogLogLevel.All = 0;
+drawlog_enums_DrawlogLogLevel.Off = 8;
+drawlog_enums_DrawlogLogLevel.Trace = 1;
+drawlog_enums_DrawlogLogLevel.Info = 3;
+drawlog_enums_DrawlogLogLevel.Warn = 5;
+drawlog_enums_DrawlogLogLevel.Error = 7;
 Main.main();
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);

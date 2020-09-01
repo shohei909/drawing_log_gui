@@ -22,8 +22,8 @@ class FileOperation
 				properties: ['openFile', 'multiSelections'],
 				filters: [
 					{
-						name: 'Visual Log',
-						extensions: ['vilog']
+						name: 'Drawing Log',
+						extensions: ['drawlog']
 					}
 				]
 			}
@@ -67,8 +67,8 @@ class FileOperation
 	{
 		var id = "player_" + contentItem.config.id;
 		var element = Browser.document.getElementById(id);
-		var player = Vilog.getPlayer(element);
-		var image:VilogImage = Vilog.getImage(element.getElementsByClassName("vilog").item(0));
+		var player = Drawlog.getPlayer(element);
+		var image:DrawlogImage = Drawlog.getImage(element.getElementsByClassName("drawlog").item(0));
 		image.loadFile(untyped contentItem.config.componentState.path);
 	}
 	
@@ -195,7 +195,7 @@ class FileOperation
 		var dialog:Dynamic = untyped Remote.dialog;
 		dialog.showMessageBox({
 			title  : "Command Not Found Error:",
-			message: "`vilog` command is not found.",
+			message: "`drawlog` command is not found.",
 			buttons: ["How to install", "OK"],
 		}).then(onExportError);
 	}
@@ -203,7 +203,7 @@ class FileOperation
 	{
 		if (event.response == 0)
 		{
-			untyped Remote.shell.openExternal("https://github.com/shohei909/visual_log_cli");
+			untyped Remote.shell.openExternal("https://github.com/shohei909/drawing_log_cli");
 		}
 	}
 	private static function export(inputPath:String, option:String, event:Dynamic):Void 
@@ -215,7 +215,7 @@ class FileOperation
 			return;
 		}
 		var item = FocusManager.focusedItem;
-		var logElement = item.element.get(0).getElementsByClassName("vilog-log").item(0);
+		var logElement = item.element.get(0).getElementsByClassName("drawlog-log").item(0);
 		logElement.innerHTML = "";
 		var spawn = ChildProcess.spawn(exe, ["-i", inputPath, option, event.filePath]);
 		function log(level:String, message:String):Void {
@@ -248,7 +248,7 @@ class FileOperation
 	
 	private static function getExportExecutable():Null<String>
 	{
-		var name = if (Node.process.platform == "win32") "vilog.exe" else "vilog";
+		var name = if (Node.process.platform == "win32") "drawlog.exe" else "drawlog";
 		var base = if (untyped Remote.app.isPackaged) 
 		{
 			Path.join(Path.dirname(untyped Remote.app.getPath("module")), "bin");
@@ -269,9 +269,9 @@ class FileOperation
 			return path;
 		}
 		var hasbin = Node.require('hasbin');
-		if (hasbin.sync("vilog")) 
+		if (hasbin.sync("drawlog")) 
 		{
-			return "vilog";
+			return "drawlog";
 		}
 		return null;
 	}

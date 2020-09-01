@@ -13,14 +13,14 @@ import js.html.Event;
 import js.html.WheelEvent;
 import js.lib.BufferSource;
 import js.node.Path;
-import Vilog;
+import Drawlog;
 import locale.Locale;
 import operation.FileOperation;
 import operation.TabOperation;
 import storage.LayoutStorage;
 import storage.RecentStorage;
-import vilog.enums.VilogKeyboardMode;
-import vilog.enums.VilogLogLevel;
+import drawlog.enums.DrawlogKeyboardMode;
+import drawlog.enums.DrawlogLogLevel;
 
 class Main 
 {
@@ -37,11 +37,11 @@ class Main
 
 	private static function init(event:Dynamic, fileNames:Array<String>):Void
 	{
-		var vilog = Node.require("./vilog.min.js");
-		untyped window.Vilog = vilog.Vilog;
-		untyped window.VilogElementLogger = vilog.VilogElementLogger;
+		var drawlog = Node.require("./drawlog.min.js");
+		untyped window.Drawlog = drawlog.Drawlog;
+		untyped window.DrawlogElementLogger = drawlog.DrawlogElementLogger;
 		
-		Vilog.changeKeyboardMode(VilogKeyboardMode.FocusedOrBody);
+		Drawlog.changeKeyboardMode(DrawlogKeyboardMode.FocusedOrBody);
 		
 		untyped Browser.window.$ = Browser.window.jQuery = Node.require("jquery");
 		untyped window.GoldenLayout = require("golden-layout");
@@ -91,10 +91,10 @@ class Main
 		
 		var id = "player_" + container.parent.config.id;
 		container.getElement().get(0).innerHTML = '
-<div id="$id" class="vilog-player">
-<div class="vi-row vi-content"><div class="vilog"></div></div>
+<div id="$id" class="drawlog-player">
+<div class="vi-row vi-content"><div class="drawlog"></div></div>
 </div>
-<code class="vilog-log"></code>
+<code class="drawlog-log"></code>
 ';
 		container.on(ContainerEvent.Show, onOpen.bind(container));
 	}
@@ -105,12 +105,12 @@ class Main
 		var config = container.parent.config;
 		var id = "player_" + config.id;
 		var playerElement = Browser.document.getElementById(id);
-		var player = Vilog.getPlayer(playerElement);
-		var imageElement = playerElement.getElementsByClassName("vilog").item(0);
-		var image:VilogImage = Vilog.getImage(imageElement);
+		var player = Drawlog.getPlayer(playerElement);
+		var imageElement = playerElement.getElementsByClassName("drawlog").item(0);
+		var image:DrawlogImage = Drawlog.getImage(imageElement);
 		var path = untyped config.componentState.path;
-		var logElement = container.getElement().get(0).getElementsByClassName("vilog-log").item(0);
-		image.addLogger(new VilogElementLogger(path, VilogLogLevel.All, logElement));
+		var logElement = container.getElement().get(0).getElementsByClassName("drawlog-log").item(0);
+		image.addLogger(new DrawlogElementLogger(path, DrawlogLogLevel.All, logElement));
 		
 		var initialized = false;
 		image.stream.addChangeHandler(() -> {

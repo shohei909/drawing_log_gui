@@ -1,11 +1,11 @@
 package;
 
-@:expose("VilogPlayer") extern class VilogPlayer {
+@:expose("DrawlogPlayer") extern class DrawlogPlayer {
 	private var autoRow : js.html.Element;
 	private var backLargeButton : js.html.ButtonElement;
 	private var backSmallButton : js.html.ButtonElement;
 	var canPlay(default,null) : Bool;
-	private var children : Array<VilogImage>;
+	private var children : Array<DrawlogImage>;
 	var container(default,null) : js.html.Element;
 	var currentStep(default,null) : Int;
 	private var fastforwardButton : js.html.ButtonElement;
@@ -23,9 +23,9 @@ package;
 	private var rewindButton : js.html.ButtonElement;
 	var rewinding(default,null) : Bool;
 	function new(container : js.html.Element) : Void;
-	private function _addChild(child : VilogImage) : Void;
+	private function _addChild(child : DrawlogImage) : Void;
 	private function addButton(className : String, icon : String, onDown : js.html.Event -> Void) : js.html.ButtonElement;
-	function addChild(child : VilogImage) : Void;
+	function addChild(child : DrawlogImage) : Void;
 	function enterFrame(time : Float) : Void;
 	function finishFastforward() : Void;
 	function finishRewind() : Void;
@@ -45,7 +45,7 @@ package;
 	function refresh() : Void;
 	private function refreshButtons() : Void;
 	function removeAllChildren() : Void;
-	function removeChild(child : VilogImage) : Void;
+	function removeChild(child : DrawlogImage) : Void;
 	function startFastforward() : Void;
 	function startRewind() : Void;
 	function step(offset : Int) : Void;

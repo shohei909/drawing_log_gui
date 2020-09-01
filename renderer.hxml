@@ -4,7 +4,7 @@ extern/jquery/extraParams.hxml
 -cp src/renderer
 -cp extern/goldenlayout/src
 -cp extern/jquery
--cp extern/vilog
+-cp extern/drawlog
 -main Main
 -cp lib/electron-10,0,0/src
 -cp lib/hxnodejs-12,1,0/src

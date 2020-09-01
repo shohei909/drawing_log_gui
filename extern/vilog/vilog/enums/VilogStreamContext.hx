@@ -1,7 +1,7 @@
-package vilog.enums;
+package drawlog.enums;
 
-@:expose("VilogStreamContext")
-enum abstract VilogStreamContext(Int)
+@:expose("DrawlogStreamContext")
+enum abstract DrawlogStreamContext(Int)
 {
 	var Header = 0;
 	var Body   = 1;

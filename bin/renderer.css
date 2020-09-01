@@ -2,32 +2,32 @@
 	display: flex;
     flex-direction: column;
 }
-.vilog-log {
+.drawlog-log {
 	width:100%;
 	flex: 0.1 0 auto;
 	min-height: 20px;
 	margin: 0;
 	padding: 0;
 }
-.vilog-player {
+.drawlog-player {
 	width:100%;
 	border: none;
 	display: flex;
     flex-direction: column;
 	flex: 1 1 auto
 }
-.vilog-player .vi-content {
+.drawlog-player .vi-content {
 	flex: 1 1 0;
 	overflow: auto;
 	flex-direction: column;
 	align-items: start;
 	justify-content: start;
 }
-.vilog-player .vi-content>div {
+.drawlog-player .vi-content>div {
 	min-height: min-content;
 	margin: auto;
 }
-.vilog-player .vi-foot {
+.drawlog-player .vi-foot {
 	flex: none;
 	display: flex;
 }

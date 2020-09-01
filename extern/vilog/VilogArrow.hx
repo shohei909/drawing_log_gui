@@ -1,6 +1,6 @@
 package;
 
-@:expose("VilogArrow") extern class VilogArrow {
+@:expose("DrawlogArrow") extern class DrawlogArrow {
 	var angle : Float;
 	var corner(default,null) : Float;
 	var isForward(default,null) : Bool;

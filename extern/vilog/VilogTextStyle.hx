@@ -1,6 +1,6 @@
 package;
 
-@:expose("VilogTextStyle") extern class VilogTextStyle {
+@:expose("DrawlogTextStyle") extern class DrawlogTextStyle {
 	var fontFamily(default,null) : String;
 	var fontSize(default,null) : Float;
 	var italic(default,null) : Bool;

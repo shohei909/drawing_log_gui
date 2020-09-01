@@ -5,8 +5,8 @@
 		"name": "shohei909",
 		"email": "909mmsphere@gmail.com"
 	},
-	"description": "Viewer for Visual Log(.vilog)",
-	"name": "VisualLogViewer",
+	"description": "Viewer for Drawing Log(.drawlog)",
+	"name": "DrawingLogViewer",
 	"dependencies": {
 		"golden-layout": "1.5.9",
 		"hasbin": "1.2.3"
@@ -16,13 +16,13 @@
 		"electron-builder": "22.4.0"
 	},
 	"build": {
-		"appId": "net.corge.vilog.viewer",
+		"appId": "net.corge.drawlog.viewer",
 		"fileAssociations": [
 			{
 				"ext": [
-					"vilog"
+					"drawlog"
 				],
-				"name": "VisualLog",
+				"name": "DrawingLog",
 				"role": "Viewer"
 			}
 		],
@@ -53,12 +53,12 @@
 			"icon.png",
 			"main.js",
 			"renderer.js",
-			"vilog.min.js",
+			"drawlog.min.js",
 			"*.css",
 			"splitjs/*",
 			"fonts/*"
 		]
 	},
-	"homepage": "https://vilog.corge.net",
+	"homepage": "https://drawlog.corge.net",
 	"license": "MIT"
 }
