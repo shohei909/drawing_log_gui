@@ -50,6 +50,7 @@ var Main = function() { };
 Main.__name__ = true;
 Main.main = function() {
 	var currentWindow = electron_renderer_Remote.getCurrentWindow();
+	locale_Locale.load();
 	storage_RecentStorage.load(currentWindow);
 	MenuBuilder.updateMenu();
 	electron_renderer_IpcRenderer.on("init",Main.init);
@@ -152,6 +153,9 @@ Math.__name__ = true;
 var MenuBuilder = function() { };
 MenuBuilder.__name__ = true;
 MenuBuilder.updateMenu = function() {
+	var template = locale_Locale.get("menu_file");
+	var template1 = { label : locale_Locale.get("menu_file_open"), accelerator : "CommandOrControl+O", click : operation_FileOperation.open};
+	var template2 = locale_Locale.get("menu_file_recent");
 	var _g = [];
 	var _g1 = 0;
 	var _g2 = storage_RecentStorage.history;
@@ -170,34 +174,58 @@ MenuBuilder.updateMenu = function() {
 			};
 		})(path)});
 	}
-	var template = [{ label : "&File", id : "file", role : "fileMenu", submenu : [{ label : "&Open", accelerator : "CommandOrControl+O", click : operation_FileOperation.open},{ id : "recent", label : "Re&cent Files", submenu : _g},{ type : "separator"},{ label : "Export &Animation PNG", accelerator : "CommandOrControl+P", click : operation_FileOperation.exportAnimationPng},{ label : "Export &Sequencial PNG", accelerator : "CommandOrControl+Shift+P", click : operation_FileOperation.exportSequencialPng},{ label : "Export Animation &GIF", accelerator : "CommandOrControl+G", click : operation_FileOperation.exportAnimationGif},{ label : "&Export AVI Video", accelerator : "CommandOrControl+Shift+A", click : operation_FileOperation.exportAvi},{ type : "separator"},{ label : "&Restart", click : function(item,focusedWindow) {
+	var template3 = { label : locale_Locale.get("menu_file_export_apng"), accelerator : "CommandOrControl+P", click : operation_FileOperation.exportAnimationPng};
+	var template4 = { label : locale_Locale.get("menu_file_export_png"), accelerator : "CommandOrControl+Shift+P", click : operation_FileOperation.exportSequencialPng};
+	var template5 = { label : locale_Locale.get("menu_file_export_gif"), accelerator : "CommandOrControl+G", click : operation_FileOperation.exportAnimationGif};
+	var template6 = { label : locale_Locale.get("menu_file_export_avi"), accelerator : "CommandOrControl+Shift+A", click : operation_FileOperation.exportAvi};
+	var template7 = locale_Locale.get("menu_file_restart");
+	var template8 = { label : template, id : "file", role : "fileMenu", submenu : [template1,{ id : "recent", label : template2, submenu : _g},{ type : "separator"},template3,template4,template5,template6,{ type : "separator"},{ label : template7, click : function(item,focusedWindow) {
 		electron_renderer_Remote.app.relaunch({ });
 		electron_renderer_Remote.app.exit();
-	}}]},{ label : "&View", id : "file", role : "viewMenu", submenu : [{ label : "&Close Tab", accelerator : "CommandOrControl+W", click : operation_TabOperation.close},{ label : "Close &Other Tabs", accelerator : "CommandOrControl+Shift+W", click : operation_TabOperation.closeOthers},{ label : "Close &All Tabs", accelerator : "CommandOrControl+Alt+W", click : operation_TabOperation.closeAll},{ type : "separator"},{ label : "&Next Tab", accelerator : "CommandOrControl+Tab", click : operation_TabOperation.next},{ label : "&Previous Tab", accelerator : "CommandOrControl+Shift+Tab", click : operation_TabOperation.prev},{ type : "separator"},{ label : "&Reload Tab", accelerator : "F5", click : operation_TabOperation.reload},{ type : "separator"},{ label : "Open &Directory", accelerator : "Alt+Shift+R", click : function(item,focusedWindow) {
+	}}]};
+	var template = locale_Locale.get("menu_view");
+	var template1 = { label : locale_Locale.get("menu_view_close_tab"), accelerator : "CommandOrControl+W", click : operation_TabOperation.close};
+	var template2 = { label : locale_Locale.get("menu_view_close_other_tabs"), accelerator : "CommandOrControl+Shift+W", click : operation_TabOperation.closeOthers};
+	var template3 = { label : locale_Locale.get("menu_view_close_all_tabs"), accelerator : "CommandOrControl+Alt+W", click : operation_TabOperation.closeAll};
+	var template4 = { label : locale_Locale.get("menu_view_next_tab"), accelerator : "CommandOrControl+Tab", click : operation_TabOperation.next};
+	var template5 = { label : locale_Locale.get("menu_view_prev_tab"), accelerator : "CommandOrControl+Shift+Tab", click : operation_TabOperation.prev};
+	var template6 = { label : locale_Locale.get("menu_view_reload_tab"), accelerator : "F5", click : operation_TabOperation.reload};
+	var template7 = { label : locale_Locale.get("menu_view_open_dir"), accelerator : "Alt+Shift+R", click : function(item,focusedWindow) {
 		var item = FocusManager.get_focusedItem();
 		if(item != null && item.isComponent && item.config.componentState.path != null) {
 			var template = electron_renderer_Remote.shell;
 			var template1 = js_node_Path.dirname(item.config.componentState.path);
 			template.openPath(template1);
 		}
-	}},{ type : "separator"},{ label : "Zoom &In", accelerator : "CommandOrControl+Plus", click : operation_TabOperation.zoomIn},{ label : "&Zoom Out", accelerator : "CommandOrControl+-", click : operation_TabOperation.zoomOut},{ label : "Zoom R&eset", accelerator : "CommandOrControl+0", click : operation_TabOperation.zoomReset}]},{ label : "&Help", submenu : [{ label : "&Github Repogitory", click : function(item,focusedWindow) {
+	}};
+	var template9 = { label : locale_Locale.get("menu_view_zoom_in"), accelerator : "CommandOrControl+Plus", click : operation_TabOperation.zoomIn};
+	var template10 = { label : locale_Locale.get("menu_view_zoom_out"), accelerator : "CommandOrControl+-", click : operation_TabOperation.zoomOut};
+	var template11 = locale_Locale.get("menu_view_zoom_reset");
+	var template12 = locale_Locale.get("menu_help");
+	var template13 = { label : locale_Locale.get("menu_help_github"), click : function(item,focusedWindow) {
 		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/visual_log_viewer");
-	}},{ label : "&Online Documentation", click : function(item,focusedWindow) {
+	}};
+	var template14 = { label : locale_Locale.get("menu_help_doc"), click : function(item,focusedWindow) {
 		electron_renderer_Remote.shell.openExternal("http://vilog.corge.net/");
-	}},{ label : "&Version", click : function(item,focusedWindow) {
+	}};
+	var template15 = { label : locale_Locale.get("menu_help_ver"), click : function(item,focusedWindow) {
 		var dialog = electron_renderer_Remote.dialog;
 		var template = "Visual Log Viewer: " + electron_renderer_Remote.app.getVersion();
 		dialog.showMessageBox({ title : "About Visual Log Viewer", message : template});
-	}},{ type : "separator"},{ label : "&Open Storage Directory", click : function(item,focusedWindow) {
+	}};
+	var template16 = { label : locale_Locale.get("menu_help_storage_dir"), click : function(item,focusedWindow) {
 		var template = electron_renderer_Remote.shell;
 		var template1 = electron_renderer_Remote.app.getPath("userData");
 		template.openPath(template1);
-	}},{ label : "Open &Installation Directory", click : function(item,focusedWindow) {
+	}};
+	var template17 = { label : locale_Locale.get("menu_help_install_dir"), click : function(item,focusedWindow) {
 		var template = electron_renderer_Remote.shell;
 		var template1 = js_node_Path.dirname(electron_renderer_Remote.app.getPath("module"));
 		template.openPath(template1);
-	}},{ type : "separator"},{ label : "&Toggle Developer Tools", accelerator : "F12", role : "toggleDevTools"}]}];
-	var menu = electron_renderer_Remote.Menu.buildFromTemplate(template);
+	}};
+	var template18 = locale_Locale.get("menu_help_devtools");
+	var template19 = [template8,{ label : template, id : "file", role : "viewMenu", submenu : [template1,template2,template3,{ type : "separator"},template4,template5,{ type : "separator"},template6,{ type : "separator"},template7,{ type : "separator"},template9,template10,{ label : template11, accelerator : "CommandOrControl+0", click : operation_TabOperation.zoomReset}]},{ label : template12, submenu : [template13,template14,template15,{ type : "separator"},template16,template17,{ type : "separator"},{ label : template18, accelerator : "F12", role : "toggleDevTools"}]}];
+	var menu = electron_renderer_Remote.Menu.buildFromTemplate(template19);
 	var currentWindow = electron_renderer_Remote.getCurrentWindow();
 	currentWindow.setMenu(menu);
 };
@@ -447,6 +475,49 @@ js_node_url_URLSearchParamsEntry.get_name = function(this1) {
 };
 js_node_url_URLSearchParamsEntry.get_value = function(this1) {
 	return this1[1];
+};
+var locale_Locale = function() { };
+locale_Locale.__name__ = true;
+locale_Locale.load = function() {
+	var names = ["en"];
+	var lang1 = window.navigator.language;
+	var lang2 = lang1.split("-")[0];
+	if(names.indexOf(lang2) == -1) {
+		names.unshift(lang2);
+	}
+	if(names.indexOf(lang1) == -1) {
+		names.unshift(lang1);
+	}
+	var lang1 = electron_renderer_Remote.app.getLocale();
+	var lang2 = lang1.split("-")[0];
+	if(names.indexOf(lang2) == -1) {
+		names.unshift(lang2);
+	}
+	if(names.indexOf(lang1) == -1) {
+		names.unshift(lang1);
+	}
+	var _g = 0;
+	while(_g < names.length) {
+		var name = names[_g];
+		++_g;
+		var path = "locale/" + name + ".json";
+		if(sys_FileSystem.exists(path)) {
+			locale_Locale.resources.push(JSON.parse(js_node_Fs.readFileSync(path,{ encoding : "utf8"})));
+		}
+	}
+};
+locale_Locale.get = function(key) {
+	var key1 = key;
+	var _g = 0;
+	var _g1 = locale_Locale.resources;
+	while(_g < _g1.length) {
+		var resource = _g1[_g];
+		++_g;
+		if(Object.prototype.hasOwnProperty.call(resource,key1)) {
+			return resource[key1];
+		}
+	}
+	return "(" + key1 + ")";
 };
 var operation_FileOperation = function() { };
 operation_FileOperation.__name__ = true;
@@ -1009,6 +1080,7 @@ if(typeofJQuery != "undefined" && $.fn != null) {
 		return new js_jquery_JqIterator(this);
 	};
 }
+locale_Locale.resources = [];
 storage_LayoutStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/layout.json";
 storage_RecentStorage.PATH = electron_renderer_Remote.app.getPath("userData") + "/state/recent.json";
 storage_RecentStorage.history = [];

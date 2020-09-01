@@ -14,6 +14,7 @@ import js.html.WheelEvent;
 import js.lib.BufferSource;
 import js.node.Path;
 import Vilog;
+import locale.Locale;
 import operation.FileOperation;
 import operation.TabOperation;
 import storage.LayoutStorage;
@@ -27,6 +28,7 @@ class Main
 	public static function main():Void
 	{
 		var currentWindow = Remote.getCurrentWindow();
+		Locale.load();
 		RecentStorage.load(currentWindow);
 		MenuBuilder.updateMenu();
 		

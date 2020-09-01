@@ -8,3 +8,7 @@ extern/jquery/extraParams.hxml
 -main Main
 -cp lib/electron-10,0,0/src
 -cp lib/hxnodejs-12,1,0/src
+--next
+--interp
+-cp src/renderer
+--main locale.LocalePreprocess

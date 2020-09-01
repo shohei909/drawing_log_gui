@@ -6,6 +6,8 @@ import electron.main.Menu;
 import electron.main.MenuItem;
 import electron.renderer.Remote;
 import js.node.Path;
+import locale.Locale;
+import locale.StringKey;
 import operation.FileOperation;
 import operation.TabOperation;
 import storage.RecentStorage;
@@ -17,18 +19,18 @@ class MenuBuilder
 	{
 		var template:Array<Dynamic> = [
 			{
-				label: '&File',
+				label: Locale.get(StringKey.menu_file),
 				id: "file",
 				role: "fileMenu",
 				submenu: ([
 					{
-						label: '&Open',
+						label: Locale.get(StringKey.menu_file_open),
 						accelerator: 'CommandOrControl+O',
 						click: FileOperation.open,
 					},
 					{
 						id: "recent",
-						label: 'Re&cent Files',
+						label: Locale.get(StringKey.menu_file_recent),
 						submenu: [
 							for (path in RecentStorage.history)
 							{
@@ -53,28 +55,28 @@ class MenuBuilder
 					},
 					{ type: 'separator' },
 					{
-						label: 'Export &Animation PNG',
+						label: Locale.get(StringKey.menu_file_export_apng),
 						accelerator: 'CommandOrControl+P',
 						click: FileOperation.exportAnimationPng,
 					},
 					{
-						label: 'Export &Sequencial PNG',
+						label: Locale.get(StringKey.menu_file_export_png),
 						accelerator: 'CommandOrControl+Shift+P',
 						click: FileOperation.exportSequencialPng,
 					},
 					{
-						label: 'Export Animation &GIF',
+						label: Locale.get(StringKey.menu_file_export_gif),
 						accelerator: 'CommandOrControl+G',
 						click: FileOperation.exportAnimationGif,
 					},
 					{
-						label: '&Export AVI Video',
+						label: Locale.get(StringKey.menu_file_export_avi),
 						accelerator: 'CommandOrControl+Shift+A',
 						click: FileOperation.exportAvi,
 					},
 					{ type: 'separator' },
 					{
-						label: '&Restart',
+						label: Locale.get(StringKey.menu_file_restart),
 						click: function(item, focusedWindow) {
 							untyped Remote.app.relaunch({});
 							untyped Remote.app.exit();
@@ -83,45 +85,45 @@ class MenuBuilder
 				]:Array<Dynamic>),
 			},
 			{
-				label: '&View',
+				label: Locale.get(StringKey.menu_view),
 				id: "file",
 				role: "viewMenu",
 				submenu: ([
 					{
-						label: '&Close Tab',
+						label: Locale.get(StringKey.menu_view_close_tab),
 						accelerator: 'CommandOrControl+W',
 						click: TabOperation.close,
 					},
 					{
-						label: 'Close &Other Tabs',
+						label: Locale.get(StringKey.menu_view_close_other_tabs),
 						accelerator: 'CommandOrControl+Shift+W',
 						click: TabOperation.closeOthers,
 					},
 					{
-						label: 'Close &All Tabs',
+						label: Locale.get(StringKey.menu_view_close_all_tabs),
 						accelerator: 'CommandOrControl+Alt+W',
 						click: TabOperation.closeAll,
 					},
 					{ type: 'separator' },
 					{
-						label: '&Next Tab',
+						label: Locale.get(StringKey.menu_view_next_tab),
 						accelerator: 'CommandOrControl+Tab',
 						click: TabOperation.next,
 					},
 					{
-						label: '&Previous Tab',
+						label: Locale.get(StringKey.menu_view_prev_tab),
 						accelerator: 'CommandOrControl+Shift+Tab',
 						click: TabOperation.prev,
 					},
 					{ type: 'separator' },
 					{
-						label: '&Reload Tab',
+						label: Locale.get(StringKey.menu_view_reload_tab),
 						accelerator: 'F5',
 						click: TabOperation.reload,
 					},
 					{ type: 'separator' },
 					{
-						label: 'Open &Directory',
+						label: Locale.get(StringKey.menu_view_open_dir),
 						accelerator: 'Alt+Shift+R',
 						click: function(item, focusedWindow) {
 							var item = FocusManager.focusedItem;
@@ -133,39 +135,39 @@ class MenuBuilder
 					},
 					{ type: 'separator' },
 					{
-						label: 'Zoom &In',
+						label: Locale.get(StringKey.menu_view_zoom_in),
 						accelerator: 'CommandOrControl+Plus',
 						click: TabOperation.zoomIn,
 					},
 					{
-						label: '&Zoom Out',
+						label: Locale.get(StringKey.menu_view_zoom_out),
 						accelerator: 'CommandOrControl+-',
 						click: TabOperation.zoomOut,
 					},
 					{
-						label: 'Zoom R&eset',
+						label: Locale.get(StringKey.menu_view_zoom_reset),
 						accelerator: 'CommandOrControl+0',
 						click: TabOperation.zoomReset,
 					},
 				]:Array<Dynamic>),
 			},
 			{
-				label: '&Help',
+				label: Locale.get(StringKey.menu_help),
 				submenu: ([
 					{
-						label: '&Github Repogitory',
+						label: Locale.get(StringKey.menu_help_github),
 						click: function(item, focusedWindow) {
 							untyped Remote.shell.openExternal("https://github.com/shohei909/visual_log_viewer");
 						}
 					},
 					{
-						label: '&Online Documentation',
+						label: Locale.get(StringKey.menu_help_doc),
 						click: function(item, focusedWindow) {
 							untyped Remote.shell.openExternal("http://vilog.corge.net/");
 						}
 					},
 					{
-						label: '&Version',
+						label: Locale.get(StringKey.menu_help_ver),
 						click: function(item, focusedWindow) {
 							var dialog = untyped Remote.dialog;
 							dialog.showMessageBox({
@@ -176,20 +178,20 @@ class MenuBuilder
 					},
 					{ type: 'separator' },
 					{
-						label: '&Open Storage Directory',
+						label: Locale.get(StringKey.menu_help_storage_dir),
 						click: function(item, focusedWindow) {
 							untyped Remote.shell.openPath(untyped Remote.app.getPath("userData"));
 						}
 					},
 					{
-						label: 'Open &Installation Directory',
+						label: Locale.get(StringKey.menu_help_install_dir),
 						click: function(item, focusedWindow) {
 							untyped Remote.shell.openPath(Path.dirname(untyped Remote.app.getPath("module")));
 						}
 					},
 					{ type: 'separator' },
 					{
-						label: '&Toggle Developer Tools',
+						label: Locale.get(StringKey.menu_help_devtools),
 						accelerator: 'F12',
 						role: 'toggleDevTools',
 					},
