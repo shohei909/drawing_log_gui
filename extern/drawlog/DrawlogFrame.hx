@@ -1,4 +1,4 @@
-package vilog;
+package;
 
 @:expose("DrawlogFrame") extern class DrawlogFrame {
 	var background(default,null) : js.lib.Map<Int,Array<Int>>;

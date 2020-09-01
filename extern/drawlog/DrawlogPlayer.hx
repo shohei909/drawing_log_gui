@@ -1,4 +1,4 @@
-package vilog;
+package;
 
 @:expose("DrawlogPlayer") extern class DrawlogPlayer {
 	private var autoRow : js.html.Element;

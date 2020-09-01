@@ -1,4 +1,4 @@
-package vilog;
+package;
 
 @:expose("DrawlogBackground") extern class DrawlogBackground {
 	var depth(default,null) : Int;

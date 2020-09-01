@@ -1,4 +1,4 @@
-package vilog;
+package;
 
 @:expose("DrawlogOutput") extern interface DrawlogOutput extends DrawlogLogger {
 	function arc(cx : Float, cy : Float, r : Float, startAngle : Float, sweepAngle : Float, isForBackground : Bool) : Void;
