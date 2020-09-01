@@ -5,8 +5,8 @@
 		"name": "shohei909",
 		"email": "909mmsphere@gmail.com"
 	},
-	"description": "Viewer for Drawing Log(.drawlog)",
-	"name": "DrawingLogViewer",
+	"description": "GUI for Drawing Log(.drawlog)",
+	"name": "DrawingLogGUI",
 	"dependencies": {
 		"golden-layout": "1.5.9",
 		"hasbin": "1.2.3"
@@ -16,14 +16,14 @@
 		"electron-builder": "22.4.0"
 	},
 	"build": {
-		"appId": "net.corge.drawlog.viewer",
+		"appId": "net.corge.drawlog.gui",
 		"fileAssociations": [
 			{
 				"ext": [
 					"drawlog"
 				],
 				"name": "DrawingLog",
-				"role": "Viewer"
+				"role": "GUI"
 			}
 		],
 		"win": {

@@ -16,7 +16,7 @@ Main.main = function() {
 	electron_main_App.on("ready",Main.onReady);
 };
 Main.onReady = function() {
-	var $window = new electron_main_BrowserWindow({ x : 150, y : 150, width : 1000, height : 750, webPreferences : { nodeIntegration : true, contextIsolation : false, enableRemoteModule : true, preload : __dirname + "/renderer.js"}, title : "Drawing Log Viewer", autoHideMenuBar : false, show : true, icon : __dirname + "/icon.png"});
+	var $window = new electron_main_BrowserWindow({ x : 150, y : 150, width : 1000, height : 750, webPreferences : { nodeIntegration : true, contextIsolation : false, enableRemoteModule : true, preload : __dirname + "/renderer.js"}, title : "Drawing Log GUI", autoHideMenuBar : false, show : true, icon : __dirname + "/icon.png"});
 	$window.setMenu(MenuBuilder.build());
 	window_WindowStorage.load($window,Main.WINDOW_STORAGE_KEY);
 	var window1 = $window;
@@ -432,7 +432,7 @@ window_WindowStorage.load = function(browserWindow,key) {
 String.__name__ = true;
 Array.__name__ = true;
 js_Boot.__toStr = ({ }).toString;
-Main.WINDOW_STORAGE_KEY = "viewer";
+Main.WINDOW_STORAGE_KEY = "gui";
 window_WindowStorage.DIR = electron_main_App.getPath("userData") + "/state/window";
 Main.main();
 })({});

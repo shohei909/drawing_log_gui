@@ -8444,7 +8444,7 @@
   },
   {
     "name": "contentTracing",
-    "description": "> Collect tracing data from Chromium to find performance bottlenecks and slow operations.\n\nProcess: Main\n\nThis module does not include a web interface. To view recorded traces, use trace viewer, available at `chrome://tracing` in Chrome.\n\n**Note:** You should not use this module until the `ready` event of the app module is emitted.",
+    "description": "> Collect tracing data from Chromium to find performance bottlenecks and slow operations.\n\nProcess: Main\n\nThis module does not include a web interface. To view recorded traces, use trace gui, available at `chrome://tracing` in Chrome.\n\n**Note:** You should not use this module until the `ready` event of the app module is emitted.",
     "slug": "content-tracing",
     "websiteUrl": "http://electronjs.org/docs/api/content-tracing",
     "repoUrl": "https://github.com/electron/electron/blob/10.0.0/docs/api/docs/api/content-tracing.md",

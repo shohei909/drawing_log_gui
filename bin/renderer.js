@@ -203,15 +203,15 @@ MenuBuilder.updateMenu = function() {
 	var template11 = locale_Locale.get("menu_view_zoom_reset");
 	var template12 = locale_Locale.get("menu_help");
 	var template13 = { label : locale_Locale.get("menu_help_github"), click : function(item,focusedWindow) {
-		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/drawing_log_viewer");
+		electron_renderer_Remote.shell.openExternal("https://github.com/shohei909/drawing_log_gui");
 	}};
 	var template14 = { label : locale_Locale.get("menu_help_doc"), click : function(item,focusedWindow) {
 		electron_renderer_Remote.shell.openExternal("http://drawlog.corge.net/");
 	}};
 	var template15 = { label : locale_Locale.get("menu_help_ver"), click : function(item,focusedWindow) {
 		var dialog = electron_renderer_Remote.dialog;
-		var template = "Drawing Log Viewer: " + electron_renderer_Remote.app.getVersion();
-		dialog.showMessageBox({ title : "About Drawing Log Viewer", message : template});
+		var template = "Drawing Log GUI: " + electron_renderer_Remote.app.getVersion();
+		dialog.showMessageBox({ title : "About Drawing Log GUI", message : template});
 	}};
 	var template16 = { label : locale_Locale.get("menu_help_storage_dir"), click : function(item,focusedWindow) {
 		var template = electron_renderer_Remote.shell;

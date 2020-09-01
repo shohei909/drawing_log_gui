@@ -8,7 +8,7 @@ import window.WindowStorage;
 
 class Main 
 {
-	public static var WINDOW_STORAGE_KEY:String = "viewer";
+	public static var WINDOW_STORAGE_KEY:String = "gui";
 	public static function main() 
 	{
 		App.on('window-all-closed', function(e:Event) { App.quit(); });
@@ -28,7 +28,7 @@ class Main
 				enableRemoteModule: true,
 				preload: Node.__dirname + '/renderer.js',
 			},
-			title: "Drawing Log Viewer",
+			title: "Drawing Log GUI",
 			autoHideMenuBar: false,
 			show : true,
 			icon : Node.__dirname + "/icon.png",

@@ -157,7 +157,7 @@ class MenuBuilder
 					{
 						label: Locale.get(StringKey.menu_help_github),
 						click: function(item, focusedWindow) {
-							untyped Remote.shell.openExternal("https://github.com/shohei909/drawing_log_viewer");
+							untyped Remote.shell.openExternal("https://github.com/shohei909/drawing_log_gui");
 						}
 					},
 					{
@@ -171,8 +171,8 @@ class MenuBuilder
 						click: function(item, focusedWindow) {
 							var dialog = untyped Remote.dialog;
 							dialog.showMessageBox({
-								title: 'About Drawing Log Viewer',
-								message: 'Drawing Log Viewer: ' + untyped Remote.app.getVersion()
+								title: 'About Drawing Log GUI',
+								message: 'Drawing Log GUI: ' + untyped Remote.app.getVersion()
 							});	
 						}
 					},
