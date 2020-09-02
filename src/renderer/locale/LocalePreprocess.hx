@@ -40,6 +40,24 @@ class LocalePreprocess
 					case menu_help_storage_dir        : "&Storage Directory";
 					case menu_help_install_dir        : "&Installation Directory";
 					case menu_help_devtools           : "&Toggle Developper Tools";
+					
+					case help_title                   : "About Drawing Log GUI";
+					
+					case file_filter_animation_gif  : 'Animation GIF image';
+					case file_filter_animation_png  : 'Animation PNG image';
+					case file_filter_sequencial_png : 'Sequencial PNG image';
+					case file_filter_avi_video      : 'AVI Video';
+					
+					case no_file_title              : 'No file is selected';
+					case no_file_description        : 'No file is selected';
+					case cli_not_found_title        : 'Command Not Found Error';
+					case cli_not_found_description  : "`drawlog` command is not found.";
+					case cli_how_to_install         : "How to install Drawing Log CLI";
+					case ok_button                  : "OK";
+					
+					case export_start               : "Exporting...";
+					case export_succeeded           : "Export succeeded!";
+					case export_failed              : "Export failed:";
 				}
 			}
 		];
@@ -55,10 +73,10 @@ class LocalePreprocess
 					case menu_file                    : "ファイル(&F)";
 					case menu_file_open               : "開く(&O)";
 					case menu_file_recent             : "最近開いたファイル(&C)";
-					case menu_file_export_apng        : "アニメーションPNGを出力(&A)";
-					case menu_file_export_png         : "連番PNGを出力(&S)";
-					case menu_file_export_gif         : "アニメーション&GIFを出力";
-					case menu_file_export_avi         : "A&VI動画を出力";
+					case menu_file_export_apng        : "アニメーション PNG を出力(&A)";
+					case menu_file_export_png         : "連番 PNG を出力(&S)";
+					case menu_file_export_gif         : "アニメーション &GIF を出力";
+					case menu_file_export_avi         : "A&VI 動画を出力";
 					case menu_file_restart            : "再起動(&R)";
 					case menu_view                    : "表示(&V)";
 					case menu_view_close_tab          : "タブを閉じる(&C)";
@@ -78,6 +96,25 @@ class LocalePreprocess
 					case menu_help_storage_dir        : "アプリケーションフォルダを開く(&S)";
 					case menu_help_install_dir        : "インストールフォルダを開く(&I)";
 					case menu_help_devtools           : "デベロッパー ツール(&T)";
+					
+					case help_title                   : "Drawing Log GUI について";
+					
+					case file_filter_animation_gif  : 'アニメーション GIF 画像';
+					case file_filter_animation_png  : 'アニメーション PNG 画像';
+					case file_filter_sequencial_png : '連番 PNG 画像';
+					case file_filter_avi_video      : 'AVI 動画';
+					
+					case no_file_title              : 'No file is selected';
+					case no_file_description        : 'ファイルが選択されていません';
+					
+					case cli_not_found_title        : 'Command Not Found Error';
+					case cli_not_found_description  : "`drawlog` コマンドが見つかりません";
+					case cli_how_to_install         : "Drawing Log CLIのインストール方法";
+					case ok_button                  : "OK";
+					
+					case export_start               : "出力中...";
+					case export_succeeded           : "出力成功!";
+					case export_failed              : "出力失敗:";
 				}
 			}
 		];

@@ -5,6 +5,7 @@ import golden_layout.Config;
 import golden_layout.Config.ItemConfig;
 import golden_layout.Container;
 import golden_layout.GoldenLayout;
+import golden_layout.Tab;
 import js.Browser;
 import js.Node;
 import js.Syntax;
@@ -97,6 +98,12 @@ class Main
 <code class="drawlog-log"></code>
 ';
 		container.on(ContainerEvent.Show, onOpen.bind(container));
+		container.on(
+			ContainerEvent.Tab,
+			tab -> {
+				container.tab.element.attr("title", untyped container.parent.config.componentState.path);
+			}
+		);
 	}
 	
 	private static function onOpen(container:Container):Void

@@ -171,7 +171,7 @@ class MenuBuilder
 						click: function(item, focusedWindow) {
 							var dialog = untyped Remote.dialog;
 							dialog.showMessageBox({
-								title: 'About Drawing Log GUI',
+								title: Locale.get(StringKey.help_title),
 								message: 'Drawing Log GUI: ' + untyped Remote.app.getVersion()
 							});	
 						}

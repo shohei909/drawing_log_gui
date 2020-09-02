@@ -93,8 +93,12 @@ Main.openFile = function(container,componentState) {
 	var id = "player_" + container.parent.config.id;
 	container.getElement().get(0).innerHTML = "\r\n<div id=\"" + id + "\" class=\"drawlog-player\">\r\n<div class=\"vi-row vi-content\"><div class=\"drawlog\"></div></div>\r\n</div>\r\n<code class=\"drawlog-log\"></code>\r\n";
 	var container1 = container;
-	container.on("show",function() {
+	var tmp = function() {
 		Main.onOpen(container1);
+	};
+	container.on("show",tmp);
+	container.on("tab",function(tab) {
+		return container.tab.element.attr("title",container.parent.config.componentState.path);
 	});
 };
 Main.onOpen = function(container) {
@@ -210,8 +214,9 @@ MenuBuilder.updateMenu = function() {
 	}};
 	var template15 = { label : locale_Locale.get("menu_help_ver"), click : function(item,focusedWindow) {
 		var dialog = electron_renderer_Remote.dialog;
-		var template = "Drawing Log GUI: " + electron_renderer_Remote.app.getVersion();
-		dialog.showMessageBox({ title : "About Drawing Log GUI", message : template});
+		var template = locale_Locale.get("help_title");
+		var template1 = "Drawing Log GUI: " + electron_renderer_Remote.app.getVersion();
+		dialog.showMessageBox({ title : template, message : template1});
 	}};
 	var template16 = { label : locale_Locale.get("menu_help_storage_dir"), click : function(item,focusedWindow) {
 		var template = electron_renderer_Remote.shell;
@@ -597,16 +602,16 @@ operation_FileOperation.findStackFromTop = function(item) {
 	return operation_FileOperation.findStackFromTop(item.contentItems[0]);
 };
 operation_FileOperation.exportSequencialPng = function() {
-	operation_FileOperation.openExportDialog("Sequencial PNG image","png","[].png","--png");
+	operation_FileOperation.openExportDialog(locale_Locale.get("file_filter_sequencial_png"),"png","[].png","--png");
 };
 operation_FileOperation.exportAnimationPng = function() {
-	operation_FileOperation.openExportDialog("Animation PNG image","png",".png","--apng");
+	operation_FileOperation.openExportDialog(locale_Locale.get("file_filter_animation_png"),"png",".png","--apng");
 };
 operation_FileOperation.exportAnimationGif = function() {
-	operation_FileOperation.openExportDialog("Animation GIF image","gif",".gif","--gif");
+	operation_FileOperation.openExportDialog(locale_Locale.get("file_filter_animation_gif"),"gif",".gif","--gif");
 };
 operation_FileOperation.exportAvi = function() {
-	operation_FileOperation.openExportDialog("AVI Video","avi",".avi","--avi");
+	operation_FileOperation.openExportDialog(locale_Locale.get("file_filter_avi_video"),"avi",".avi","--avi");
 };
 operation_FileOperation.openExportDialog = function(filterName,ext,suffix,option) {
 	var executable = operation_FileOperation.getExportExecutable();
@@ -626,12 +631,12 @@ operation_FileOperation.openExportDialog = function(filterName,ext,suffix,option
 		};
 		dialog.showSaveDialog(electron_renderer_Remote.getCurrentWindow(),{ defaultPath : js_node_Path.join(js_node_Path.dirname(path),js_node_Path.basename(path,js_node_Path.extname(path)) + suffix), properties : ["createDirectory","showOverwriteConfirmation"], filters : [{ name : filterName, extensions : [ext]}]}).then(tmp);
 	} else {
-		dialog.showMessageBox({ title : "No file is selected", message : "No file is selected"});
+		dialog.showMessageBox({ title : "", message : ""});
 	}
 };
 operation_FileOperation.showExportError = function() {
 	var dialog = electron_renderer_Remote.dialog;
-	dialog.showMessageBox({ title : "Command Not Found Error:", message : "`drawlog` command is not found.", buttons : ["How to install","OK"]}).then(operation_FileOperation.onExportError);
+	dialog.showMessageBox({ title : locale_Locale.get("cli_not_found_title"), message : locale_Locale.get("cli_not_found_description"), buttons : [locale_Locale.get("cli_how_to_install"),locale_Locale.get("ok_button")]}).then(operation_FileOperation.onExportError);
 };
 operation_FileOperation.onExportError = function(event) {
 	if(event.response == 0) {
@@ -657,7 +662,7 @@ operation_FileOperation.export = function(inputPath,option,event) {
 		element.textContent = message;
 		logElement.append(element);
 	};
-	log("info","Exporting...");
+	log("info",locale_Locale.get("export_start"));
 	spawn.stdout.on("data",function(data) {
 		log("info",data);
 	});
@@ -667,9 +672,9 @@ operation_FileOperation.export = function(inputPath,option,event) {
 	spawn.on("close",function(code) {
 		var element = window.document.createElement("pre");
 		if(code == 0) {
-			log("info","Export succeeded!");
+			log("info",locale_Locale.get("export_succeeded"));
 		} else {
-			log("error","Export failed: " + code);
+			log("error",locale_Locale.get("export_failed") + " " + code);
 		}
 		logElement.append(element);
 	});

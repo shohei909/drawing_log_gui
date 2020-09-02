@@ -29,4 +29,22 @@ package locale;
 	var menu_help_storage_dir        ;
 	var menu_help_install_dir        ;
 	var menu_help_devtools           ;
+	
+	var help_title                   ;
+	
+	var file_filter_animation_png    ;
+	var file_filter_animation_gif    ;
+	var file_filter_sequencial_png   ;
+	var file_filter_avi_video        ;
+	
+	var no_file_title                ;
+	var no_file_description          ;
+	var cli_not_found_title          ;
+	var cli_not_found_description    ;
+	var cli_how_to_install           ;
+	var ok_button                    ;
+	var export_start                 ;
+	var export_succeeded             ;
+	var export_failed                ;
+	
 }

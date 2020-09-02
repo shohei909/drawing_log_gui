@@ -7,6 +7,8 @@ import js.Node;
 import js.node.ChildProcess;
 import js.node.Path;
 import js.node.Process;
+import locale.Locale;
+import locale.StringKey;
 import storage.LayoutStorage;
 import storage.RecentStorage;
 import sys.FileSystem;
@@ -112,7 +114,7 @@ class FileOperation
 	public static function exportSequencialPng():Void
 	{
 		openExportDialog(
-			'Sequencial PNG image',
+			Locale.get(StringKey.file_filter_sequencial_png),
 			"png", 
 			"[].png",
 			"--png"
@@ -122,7 +124,7 @@ class FileOperation
 	public static function exportAnimationPng():Void
 	{
 		openExportDialog(
-			'Animation PNG image',
+			Locale.get(StringKey.file_filter_animation_png),
 			"png", 
 			".png", 
 			"--apng"
@@ -132,7 +134,7 @@ class FileOperation
 	public static function exportAnimationGif():Void
 	{
 		openExportDialog(
-			'Animation GIF image',
+			Locale.get(StringKey.file_filter_animation_gif),
 			"gif", 
 			".gif",
 			"--gif"
@@ -142,7 +144,7 @@ class FileOperation
 	public static function exportAvi():Void
 	{
 		openExportDialog(
-			'AVI Video',
+			Locale.get(StringKey.file_filter_avi_video),
 			"avi", 
 			".avi",
 			"--avi"
@@ -185,8 +187,8 @@ class FileOperation
 		else
 		{
 			dialog.showMessageBox({
-				title  : 'No file is selected',
-				message: 'No file is selected',
+				title  : '',
+				message: '',
 			});	
 		}
 	}
@@ -194,9 +196,12 @@ class FileOperation
 	{
 		var dialog:Dynamic = untyped Remote.dialog;
 		dialog.showMessageBox({
-			title  : "Command Not Found Error:",
-			message: "`drawlog` command is not found.",
-			buttons: ["How to install", "OK"],
+			title  :  Locale.get(StringKey.cli_not_found_title      ),
+			message:  Locale.get(StringKey.cli_not_found_description),
+			buttons: [	
+				Locale.get(StringKey.cli_how_to_install), 
+				Locale.get(StringKey.ok_button         ),
+			],
 		}).then(onExportError);
 	}
 	private static function onExportError(event:Dynamic):Void 
@@ -224,7 +229,7 @@ class FileOperation
 			element.textContent = message;
 			logElement.append(element);
 		}
-		log("info", "Exporting...");
+		log("info", Locale.get(StringKey.export_start));
 		
 		spawn.stdout.on('data', function (data) {
 			log("info", data);
@@ -236,11 +241,11 @@ class FileOperation
 			var element = Browser.document.createElement("pre");
 			if (code == 0) 
 			{
-				log("info", "Export succeeded!");
+				log("info", Locale.get(StringKey.export_succeeded));
 			} 
 			else 
 			{
-				log("error", "Export failed: " + code);
+				log("error", Locale.get(StringKey.export_failed) + " "+ code);
 			}
 			logElement.append(element);
 		});
