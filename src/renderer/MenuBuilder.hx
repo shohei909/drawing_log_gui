@@ -9,7 +9,10 @@ import js.node.Path;
 import locale.Locale;
 import locale.StringKey;
 import operation.FileOperation;
+import operation.BulkOperation;
 import operation.TabOperation;
+import setting.KeyConfig;
+import setting.KeyConfigKey;
 import storage.RecentStorage;
 import sys.FileSystem;
 
@@ -25,7 +28,7 @@ class MenuBuilder
 				submenu: ([
 					{
 						label: Locale.get(StringKey.menu_file_open),
-						accelerator: 'CommandOrControl+O',
+						accelerator: KeyConfig.get(KeyConfigKey.file_open),
 						click: FileOperation.open,
 					},
 					{
@@ -56,27 +59,28 @@ class MenuBuilder
 					{ type: 'separator' },
 					{
 						label: Locale.get(StringKey.menu_file_export_apng),
-						accelerator: 'CommandOrControl+P',
+						accelerator: KeyConfig.get(KeyConfigKey.file_export_apng),
 						click: FileOperation.exportAnimationPng,
 					},
 					{
 						label: Locale.get(StringKey.menu_file_export_png),
-						accelerator: 'CommandOrControl+Shift+P',
+						accelerator: KeyConfig.get(KeyConfigKey.file_export_png),
 						click: FileOperation.exportSequencialPng,
 					},
 					{
 						label: Locale.get(StringKey.menu_file_export_gif),
-						accelerator: 'CommandOrControl+G',
+						accelerator: KeyConfig.get(KeyConfigKey.file_export_gif),
 						click: FileOperation.exportAnimationGif,
 					},
 					{
 						label: Locale.get(StringKey.menu_file_export_avi),
-						accelerator: 'CommandOrControl+Shift+A',
+						accelerator: KeyConfig.get(KeyConfigKey.file_export_avi),
 						click: FileOperation.exportAvi,
 					},
 					{ type: 'separator' },
 					{
 						label: Locale.get(StringKey.menu_file_restart),
+						accelerator: KeyConfig.get(KeyConfigKey.file_restart),
 						click: function(item, focusedWindow) {
 							untyped Remote.app.relaunch({});
 							untyped Remote.app.exit();
@@ -91,40 +95,40 @@ class MenuBuilder
 				submenu: ([
 					{
 						label: Locale.get(StringKey.menu_view_close_tab),
-						accelerator: 'CommandOrControl+W',
+						accelerator: KeyConfig.get(KeyConfigKey.view_close_tab),
 						click: TabOperation.close,
 					},
 					{
 						label: Locale.get(StringKey.menu_view_close_other_tabs),
-						accelerator: 'CommandOrControl+Shift+W',
+						accelerator: KeyConfig.get(KeyConfigKey.view_close_other_tabs),
 						click: TabOperation.closeOthers,
 					},
 					{
 						label: Locale.get(StringKey.menu_view_close_all_tabs),
-						accelerator: 'CommandOrControl+Alt+W',
+						accelerator: KeyConfig.get(KeyConfigKey.view_close_all_tabs),
 						click: TabOperation.closeAll,
 					},
 					{ type: 'separator' },
 					{
 						label: Locale.get(StringKey.menu_view_next_tab),
-						accelerator: 'CommandOrControl+Tab',
+						accelerator: KeyConfig.get(KeyConfigKey.view_next_tab),
 						click: TabOperation.next,
 					},
 					{
 						label: Locale.get(StringKey.menu_view_prev_tab),
-						accelerator: 'CommandOrControl+Shift+Tab',
+						accelerator: KeyConfig.get(KeyConfigKey.view_prev_tab),
 						click: TabOperation.prev,
 					},
 					{ type: 'separator' },
 					{
 						label: Locale.get(StringKey.menu_view_reload_tab),
-						accelerator: 'F5',
+						accelerator: KeyConfig.get(KeyConfigKey.view_reload_tab),
 						click: TabOperation.reload,
 					},
 					{ type: 'separator' },
 					{
 						label: Locale.get(StringKey.menu_view_open_dir),
-						accelerator: 'Alt+Shift+R',
+						accelerator: KeyConfig.get(KeyConfigKey.view_open_dir),
 						click: function(item, focusedWindow) {
 							var item = FocusManager.focusedItem;
 							if (item != null && item.isComponent && untyped item.config.componentState.path != null)
@@ -136,18 +140,60 @@ class MenuBuilder
 					{ type: 'separator' },
 					{
 						label: Locale.get(StringKey.menu_view_zoom_in),
-						accelerator: 'CommandOrControl+Plus',
+						accelerator: KeyConfig.get(KeyConfigKey.view_zoom_in),
 						click: TabOperation.zoomIn,
 					},
 					{
 						label: Locale.get(StringKey.menu_view_zoom_out),
-						accelerator: 'CommandOrControl+-',
+						accelerator: KeyConfig.get(KeyConfigKey.view_zoom_out),
 						click: TabOperation.zoomOut,
 					},
 					{
 						label: Locale.get(StringKey.menu_view_zoom_reset),
-						accelerator: 'CommandOrControl+0',
+						accelerator: KeyConfig.get(KeyConfigKey.view_zoom_reset),
 						click: TabOperation.zoomReset,
+					},
+				]:Array<Dynamic>),
+			},
+			{
+				label: Locale.get(StringKey.menu_bulk),
+				id: "file",
+				role: "viewMenu",
+				submenu: ([
+					{
+						label: Locale.get(StringKey.menu_bulk_play),
+						accelerator: KeyConfig.get(KeyConfigKey.bulk_play),
+						click: BulkOperation.togglePlay,
+					},
+					{
+						label: Locale.get(StringKey.menu_bulk_backward),
+						accelerator: KeyConfig.get(KeyConfigKey.bulk_backward),
+						click: BulkOperation.fastBackward,
+					},
+					{
+						label: Locale.get(StringKey.menu_bulk_forward),
+						accelerator: KeyConfig.get(KeyConfigKey.bulk_forward),
+						click: BulkOperation.fastForward,
+					},
+					{
+						label: Locale.get(StringKey.menu_bulk_back_step),
+						accelerator: KeyConfig.get(KeyConfigKey.bulk_back_step),
+						click: BulkOperation.stepBackward,
+					},
+					{
+						label: Locale.get(StringKey.menu_bulk_fore_step),
+						accelerator: KeyConfig.get(KeyConfigKey.bulk_fore_step),
+						click: BulkOperation.stepForward,
+					},
+					{
+						label: Locale.get(StringKey.menu_bulk_back_fast_step),
+						accelerator: KeyConfig.get(KeyConfigKey.bulk_back_fast_step),
+						click: BulkOperation.stepFastBackward,
+					},
+					{
+						label: Locale.get(StringKey.menu_bulk_fore_fast_step),
+						accelerator: KeyConfig.get(KeyConfigKey.bulk_fore_fast_step),
+						click: BulkOperation.stepFastForward,
 					},
 				]:Array<Dynamic>),
 			},
@@ -156,18 +202,38 @@ class MenuBuilder
 				submenu: ([
 					{
 						label: Locale.get(StringKey.menu_help_github),
-						click: function(item, focusedWindow) {
-							untyped Remote.shell.openExternal("https://github.com/shohei909/drawing_log_gui");
-						}
+						submenu: ([
+							{
+								label: Locale.get(StringKey.menu_help_github_gui),
+								click: function(item, focusedWindow) {
+									untyped Remote.shell.openExternal("https://github.com/shohei909/drawing_log_gui");
+								}
+							},
+							{
+								label: Locale.get(StringKey.menu_help_github_cli),
+								click: function(item, focusedWindow) {
+									untyped Remote.shell.openExternal("https://github.com/shohei909/drawing_log_cli");
+								}
+							},
+						])
 					},
 					{
 						label: Locale.get(StringKey.menu_help_doc),
+						accelerator: KeyConfig.get(KeyConfigKey.help_doc),
 						click: function(item, focusedWindow) {
 							untyped Remote.shell.openExternal("http://drawlog.corge.net/");
 						}
 					},
 					{
+						label: Locale.get(StringKey.menu_help_playground),
+						accelerator: KeyConfig.get(KeyConfigKey.help_doc),
+						click: function(item, focusedWindow) {
+							untyped Remote.shell.openExternal("http://drawlog.corge.net/playground");
+						}
+					},
+					{
 						label: Locale.get(StringKey.menu_help_ver),
+						accelerator: KeyConfig.get(KeyConfigKey.help_ver),
 						click: function(item, focusedWindow) {
 							var dialog = untyped Remote.dialog;
 							dialog.showMessageBox({
@@ -179,12 +245,14 @@ class MenuBuilder
 					{ type: 'separator' },
 					{
 						label: Locale.get(StringKey.menu_help_storage_dir),
+						accelerator: KeyConfig.get(KeyConfigKey.help_storage_dir),
 						click: function(item, focusedWindow) {
 							untyped Remote.shell.openPath(untyped Remote.app.getPath("userData"));
 						}
 					},
 					{
 						label: Locale.get(StringKey.menu_help_install_dir),
+						accelerator: KeyConfig.get(KeyConfigKey.help_install_dir),
 						click: function(item, focusedWindow) {
 							untyped Remote.shell.openPath(Path.dirname(untyped Remote.app.getPath("module")));
 						}
@@ -192,7 +260,7 @@ class MenuBuilder
 					{ type: 'separator' },
 					{
 						label: Locale.get(StringKey.menu_help_devtools),
-						accelerator: 'F12',
+						accelerator: KeyConfig.get(KeyConfigKey.help_devtools),
 						role: 'toggleDevTools',
 					},
 				]:Array<Dynamic>)

@@ -256,7 +256,7 @@ class FileOperation
 		var name = if (Node.process.platform == "win32") "drawlog.exe" else "drawlog";
 		var base = if (untyped Remote.app.isPackaged) 
 		{
-			Path.join(Path.dirname(untyped Remote.app.getPath("module")), "bin");
+			Path.join(Path.dirname(untyped Remote.app.getPath("module")), "lib", "bin");
 		}
 		else
 		{
@@ -266,7 +266,7 @@ class FileOperation
 				case 'darwin': "mac";
 				case other   : other;
 			}
-			Path.join(Node.process.cwd(), "bin", os, Node.process.arch);
+			Path.join(Node.process.cwd(), "lib", os, Node.process.arch, "bin");
 		}
 		var path = Path.join(base, name);
 		if (FileSystem.exists(path))

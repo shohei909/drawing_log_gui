@@ -35,11 +35,22 @@ class LocalePreprocess
 					case menu_view_zoom_reset         : "Zoom &Reset";
 					case menu_help                    : "&Help";
 					case menu_help_github             : "&Github Repository";
+					case menu_help_github_cli         : "Drawing Log &CLI";
+					case menu_help_github_gui         : "Drawing Log &GUI";
 					case menu_help_doc                : "&Online Documentaion";
+					case menu_help_playground         : "&Playground";
 					case menu_help_ver                : "&Version";
 					case menu_help_storage_dir        : "&Storage Directory";
 					case menu_help_install_dir        : "&Installation Directory";
 					case menu_help_devtools           : "&Toggle Developper Tools";
+					case menu_bulk                    : "&Bulk Action";
+					case menu_bulk_play               : "&Play/Stop";
+					case menu_bulk_backward           : "&Rewind";
+					case menu_bulk_forward            : "&Fast Forward";
+					case menu_bulk_back_step          : "Step B&ackward";
+					case menu_bulk_fore_step          : "&Step Forward";
+					case menu_bulk_back_fast_step     : "10 Steps Ba&ckward";
+					case menu_bulk_fore_fast_step     : "&10 Steps Forward";
 					
 					case help_title                   : "About Drawing Log GUI";
 					
@@ -91,11 +102,22 @@ class LocalePreprocess
 					case menu_view_zoom_reset         : "拡縮をリセット(&R)";
 					case menu_help                    : "ヘルプ(&H)";
 					case menu_help_github             : "&Github レポジトリ";
+					case menu_help_github_cli         : "Drawing Log &CLI";
+					case menu_help_github_gui         : "Drawing Log &GUI";
 					case menu_help_doc                : "オンラインドキュメント(&O)";
+					case menu_help_playground         : "プレイグラウンド(&P)";
 					case menu_help_ver                : "バージョン(&V)";
 					case menu_help_storage_dir        : "アプリケーションフォルダを開く(&S)";
 					case menu_help_install_dir        : "インストールフォルダを開く(&I)";
 					case menu_help_devtools           : "デベロッパー ツール(&T)";
+					case menu_bulk                    : "一括操作(&P)";
+					case menu_bulk_play               : "再生/停止(&P)";
+					case menu_bulk_backward           : "巻き戻し";
+					case menu_bulk_forward            : "早送り";
+					case menu_bulk_back_step          : "1つ戻す";
+					case menu_bulk_fore_step          : "1つ進む";
+					case menu_bulk_back_fast_step     : "10戻す";
+					case menu_bulk_fore_fast_step     : "10進む";
 					
 					case help_title                   : "Drawing Log GUI について";
 					

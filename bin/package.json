@@ -13,7 +13,7 @@
 	},
 	"devDependencies": {
 		"electron": "9.2.0",
-		"electron-builder": "22.4.0"
+		"electron-builder": "22.8.0"
 	},
 	"build": {
 		"appId": "net.corge.drawlog.gui",
@@ -46,10 +46,11 @@
 		},
 		"extraFiles": [
 			{
-				"from": "bin/${os}/${arch}",
-				"to": "bin"
+				"from": "lib/${os}/${arch}",
+				"to": "lib"
 			},
-			"locale/*.json"
+			"locale/*.json",
+			"settings/*.json"
 		],
 		"files": [
 			"index.html",

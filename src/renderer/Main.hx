@@ -18,6 +18,7 @@ import Drawlog;
 import locale.Locale;
 import operation.FileOperation;
 import operation.TabOperation;
+import setting.KeyConfig;
 import storage.LayoutStorage;
 import storage.RecentStorage;
 import drawlog.enums.DrawlogKeyboardMode;
@@ -30,6 +31,7 @@ class Main
 	{
 		var currentWindow = Remote.getCurrentWindow();
 		Locale.load();
+		KeyConfig.load();
 		RecentStorage.load(currentWindow);
 		MenuBuilder.updateMenu();
 		

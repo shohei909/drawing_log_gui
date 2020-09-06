@@ -2,7 +2,6 @@ package locale;
 
 @:enum abstract StringKey(String) 
 {
-	// menu
 	var menu_file                    ;
 	var menu_file_open               ;
 	var menu_file_recent             ;
@@ -24,11 +23,22 @@ package locale;
 	var menu_view_zoom_reset         ;
 	var menu_help                    ;
 	var menu_help_github             ;
+	var menu_help_github_cli         ;
+	var menu_help_github_gui         ;
 	var menu_help_doc                ;
+	var menu_help_playground         ;
 	var menu_help_ver                ;
 	var menu_help_storage_dir        ;
 	var menu_help_install_dir        ;
 	var menu_help_devtools           ;
+	var menu_bulk                    ;
+	var menu_bulk_play               ;
+	var menu_bulk_backward           ;
+	var menu_bulk_forward            ;
+	var menu_bulk_back_step          ;
+	var menu_bulk_fore_step          ;
+	var menu_bulk_back_fast_step     ;
+	var menu_bulk_fore_fast_step     ;
 	
 	var help_title                   ;
 	

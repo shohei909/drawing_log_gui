@@ -11,4 +11,4 @@ extern/jquery/extraParams.hxml
 --next
 --interp
 -cp src/renderer
---main locale.LocalePreprocess
+--main PreprocessMain
