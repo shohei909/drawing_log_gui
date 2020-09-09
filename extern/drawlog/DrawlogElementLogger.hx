@@ -6,6 +6,8 @@ package;
 	var fileName(default,null) : String;
 	var foreground(default,null) : js.html.Element;
 	var logLevel(default,null) : Int;
+	var showsFileName(default,null) : Bool;
+	var showsLineNumber(default,null) : Bool;
 	function new(fileName : String, logLevel : Int, container : js.html.Element) : Void;
 	function clear() : Void;
 	function clearBackground() : Void;

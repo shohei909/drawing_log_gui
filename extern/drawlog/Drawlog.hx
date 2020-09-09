@@ -20,4 +20,5 @@ package;
 	private static function onKeyUp(e : js.html.KeyboardEvent) : Void;
 	static function reload() : Void;
 	private static function resetFocus() : Void;
+	private static function start() : Void;
 }
