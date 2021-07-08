@@ -12,8 +12,8 @@
 		"hasbin": "1.2.3"
 	},
 	"devDependencies": {
-		"electron": "9.4.0",
-		"electron-builder": "22.8.0"
+		"electron": "9.4.4",
+		"electron-builder": "22.11.7"
 	},
 	"build": {
 		"appId": "net.corge.drawlog.gui",
