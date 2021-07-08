@@ -3,6 +3,8 @@ import electron.renderer.Remote;
 import haxe.DynamicAccess;
 import haxe.Json;
 import js.Browser;
+import js.Node;
+import js.node.Path;
 import locale.StringKey;
 import sys.FileSystem;
 import sys.io.File;
@@ -25,6 +27,14 @@ class Locale
 		for (name in names)
 		{
 			var path = "locale/" + name + ".json";
+			path = if (untyped Remote.app.isPackaged) 
+			{
+				Path.join(Path.dirname(untyped Remote.app.getPath("module")), path);
+			}
+			else
+			{
+				Path.join(Node.process.cwd(), path);
+			}
 			if (FileSystem.exists(path))
 			{
 				resources.push(Json.parse(File.getContent(path)));

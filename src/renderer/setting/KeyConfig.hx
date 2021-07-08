@@ -2,6 +2,8 @@ package setting;
 import electron.renderer.Remote;
 import haxe.DynamicAccess;
 import haxe.Json;
+import js.Node;
+import js.node.Path;
 import locale.StringKey;
 import sys.FileSystem;
 import sys.io.File;
@@ -13,7 +15,18 @@ class KeyConfig
 	{
 		var names = [
 			untyped Remote.app.getPath("userData") + "/settings/key.json",
-			"settings/key.json"
+			{
+				var path = "settings/key.json";
+				path = if (untyped Remote.app.isPackaged) 
+				{
+					Path.join(Path.dirname(untyped Remote.app.getPath("module")), path);
+				}
+				else
+				{
+					Path.join(Node.process.cwd(), path);
+				}
+			}
+			
 		];
 		
 		for (name in names)
@@ -35,6 +48,6 @@ class KeyConfig
 			if (value == null) continue;
 			return value;
 		}
-		return KeyConfigDefault.resolve(key);
+		return null;//KeyConfigDefault.resolve(key);
 	}
 }

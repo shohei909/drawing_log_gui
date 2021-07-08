@@ -97,7 +97,7 @@ class Main
 <div id="$id" class="drawlog-player">
 <div class="vi-row vi-content"><div class="drawlog"></div></div>
 </div>
-<code class="drawlog-log"></code>
+<code class="drawlog-log" data-shows="line"></code>
 ';
 		container.on(ContainerEvent.Show, onOpen.bind(container));
 		container.on(

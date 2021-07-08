@@ -92,7 +92,7 @@ Main.openFile = function(container,componentState) {
 	var element = container.getElement().get(0);
 	element.tabIndex = 0;
 	var id = "player_" + container.parent.config.id;
-	container.getElement().get(0).innerHTML = "\r\n<div id=\"" + id + "\" class=\"drawlog-player\">\r\n<div class=\"vi-row vi-content\"><div class=\"drawlog\"></div></div>\r\n</div>\r\n<code class=\"drawlog-log\"></code>\r\n";
+	container.getElement().get(0).innerHTML = "\r\n<div id=\"" + id + "\" class=\"drawlog-player\">\r\n<div class=\"vi-row vi-content\"><div class=\"drawlog\"></div></div>\r\n</div>\r\n<code class=\"drawlog-log\" data-shows=\"line\"></code>\r\n";
 	var container1 = container;
 	var tmp = function() {
 		Main.onOpen(container1);
@@ -517,6 +517,7 @@ locale_Locale.load = function() {
 		var name = names[_g];
 		++_g;
 		var path = "locale/" + name + ".json";
+		path = electron_renderer_Remote.app.isPackaged ? js_node_Path.join(js_node_Path.dirname(electron_renderer_Remote.app.getPath("module")),path) : js_node_Path.join(process.cwd(),path);
 		if(sys_FileSystem.exists(path)) {
 			locale_Locale.resources.push(JSON.parse(js_node_Fs.readFileSync(path,{ encoding : "utf8"})));
 		}
@@ -922,10 +923,13 @@ operation_TabOperation.prev = function() {
 var setting_KeyConfig = function() { };
 setting_KeyConfig.__name__ = true;
 setting_KeyConfig.load = function() {
-	var names = [electron_renderer_Remote.app.getPath("userData") + "/settings/key.json","settings/key.json"];
+	var names = electron_renderer_Remote.app.getPath("userData") + "/settings/key.json";
+	var path = "settings/key.json";
+	path = electron_renderer_Remote.app.isPackaged ? js_node_Path.join(js_node_Path.dirname(electron_renderer_Remote.app.getPath("module")),path) : js_node_Path.join(process.cwd(),path);
+	var names1 = [names,path];
 	var _g = 0;
-	while(_g < names.length) {
-		var name = names[_g];
+	while(_g < names1.length) {
+		var name = names1[_g];
 		++_g;
 		if(sys_FileSystem.exists(name)) {
 			setting_KeyConfig.resources.push(JSON.parse(js_node_Fs.readFileSync(name,{ encoding : "utf8"})));
@@ -948,69 +952,7 @@ setting_KeyConfig.get = function(key) {
 		}
 		return value;
 	}
-	return setting_KeyConfigDefault.resolve(key);
-};
-var setting_KeyConfigDefault = function() { };
-setting_KeyConfigDefault.__name__ = true;
-setting_KeyConfigDefault.resolve = function(key) {
-	switch(key) {
-	case "bulk_back_fast_step":
-		return "CommandOrControl+PageUp";
-	case "bulk_back_step":
-		return "CommandOrControl+Left";
-	case "bulk_backward":
-		return "CommandOrControl+Shift+Left";
-	case "bulk_fore_fast_step":
-		return "CommandOrControl+PageDown";
-	case "bulk_fore_step":
-		return "CommandOrControl+Right";
-	case "bulk_forward":
-		return "CommandOrControl+Shift+Right";
-	case "bulk_play":
-		return "CommandOrControl+Space";
-	case "file_export_apng":
-		return "CommandOrControl+P";
-	case "file_export_avi":
-		return "CommandOrControl+Shift+A";
-	case "file_export_gif":
-		return "CommandOrControl+G";
-	case "file_export_png":
-		return "CommandOrControl+Shift+P";
-	case "file_open":
-		return "CommandOrControl+O";
-	case "file_restart":
-		return "";
-	case "help_devtools":
-		return "F12";
-	case "help_doc":
-		return "";
-	case "help_install_dir":
-		return "";
-	case "help_storage_dir":
-		return "";
-	case "help_ver":
-		return "";
-	case "view_close_all_tabs":
-		return "CommandOrControl+Alt+W";
-	case "view_close_other_tabs":
-		return "CommandOrControl+Shift+W";
-	case "view_close_tab":
-		return "CommandOrControl+W";
-	case "view_next_tab":
-		return "CommandOrControl+Tab";
-	case "view_open_dir":
-		return "Alt+Shift+R";
-	case "view_prev_tab":
-		return "CommandOrControl+Shift+Tab";
-	case "view_reload_tab":
-		return "F5";
-	case "view_zoom_in":
-		return "CommandOrControl+Plus";
-	case "view_zoom_out":
-		return "CommandOrControl+-";
-	case "view_zoom_reset":
-		return "CommandOrControl+0";
-	}
+	return null;
 };
 var storage_LayoutStorage = function() { };
 storage_LayoutStorage.__name__ = true;
